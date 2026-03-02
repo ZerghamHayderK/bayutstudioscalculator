@@ -166,12 +166,12 @@
             .then(text => {
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 rawData = json.table.rows.map(row => ({
-                    category: row.c[0]?.v,
-                    product: row.c[1]?.v,
-                    pkr: row.c[2]?.v || 0,
-                    usd: row.c[3]?.v || 0,
-                    sar: row.c[4]?.v || 0,
-                    aed: row.c[5]?.v || 0 
+                    category: row.c[1]?.v,
+                    product: row.c[2]?.v,
+                    pkr: row.c[5]?.v || 0,
+                    usd: row.c[6]?.v || 0,
+                    sar: row.c[7]?.v || 0,
+                    aed: row.c[8]?.v || 0 
                 }));
                 init();
             })
