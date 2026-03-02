@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayut Studios | Price Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #37b36f;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: #000000;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 1. STAR LAYERS — sharp, stationary, glistening */
+
+        /* Layer A: white stars */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(1px 1px at 8% 7%, #fff, transparent),
+                radial-gradient(1px 1px at 18% 35%, #fff, transparent),
+                radial-gradient(2px 2px at 28% 62%, #fff, transparent),
+                radial-gradient(1px 1px at 37% 18%, #fff, transparent),
+                radial-gradient(1px 1px at 45% 85%, #fff, transparent),
+                radial-gradient(2px 2px at 56% 42%, #fff, transparent),
+                radial-gradient(1px 1px at 65% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 72% 74%, #fff, transparent),
+                radial-gradient(2px 2px at 83% 30%, #fff, transparent),
+                radial-gradient(1px 1px at 91% 56%, #fff, transparent),
+                radial-gradient(1px 1px at 5% 50%, #fff, transparent),
+                radial-gradient(1px 1px at 95% 85%, #fff, transparent),
+                radial-gradient(2px 2px at 50% 25%, #fff, transparent),
+                radial-gradient(1px 1px at 33% 90%, #fff, transparent),
+                radial-gradient(1px 1px at 78% 95%, #fff, transparent);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            animation: glisten-a 4s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        /* Layer B: green-tinted stars */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(1px 1px at 13% 22%, var(--primary-green), transparent),
+                radial-gradient(2px 2px at 24% 55%, var(--primary-green), transparent),
+                radial-gradient(1px 1px at 41% 38%, var(--primary-green), transparent),
+                radial-gradient(2px 2px at 59% 78%, var(--primary-green), transparent),
+                radial-gradient(1px 1px at 70% 15%, var(--primary-green), transparent),
+                radial-gradient(1px 1px at 85% 65%, var(--primary-green), transparent),
+                radial-gradient(2px 2px at 96% 40%, var(--primary-green), transparent),
+                radial-gradient(1px 1px at 3% 80%, var(--primary-green), transparent),
+                radial-gradient(1px 1px at 52% 93%, var(--primary-green), transparent),
+                radial-gradient(2px 2px at 88% 10%, var(--primary-green), transparent);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            animation: glisten-b 5.5s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes glisten-a {
+            0% {
+                opacity: 0.25;
+                filter: brightness(1);
+            }
+
+            30% {
+                opacity: 1;
+                filter: brightness(2);
+            }
+
+            60% {
+                opacity: 0.4;
+                filter: brightness(1);
+            }
+
+            100% {
+                opacity: 0.9;
+                filter: brightness(2.5);
+            }
+        }
+
+        @keyframes glisten-b {
+            0% {
+                opacity: 0.8;
+                filter: brightness(2);
+            }
+
+            40% {
+                opacity: 0.2;
+                filter: brightness(1);
+            }
+
+            70% {
+                opacity: 1;
+                filter: brightness(3);
+            }
+
+            100% {
+                opacity: 0.35;
+                filter: brightness(1);
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .logo {
+            width: 80px;
+            border-radius: 15px;
+        }
+
+        .rich-header {
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin: 20px 0;
+            text-shadow: 0 0 40px rgba(55, 179, 111, 0.8);
+            font-size: 2.5rem;
+        }
+
+        /* 2. GLASS BOX DESIGN */
+        .glass-panel {
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            color: var(--primary-green);
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid var(--glass-border);
+            color: white;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+        }
+
+        /* 3. BUTTONS */
+        .btn-add {
+            width: 100%;
+            background: linear-gradient(135deg, #1a6b4a 0%, #37b36f 100%);
+            border: none;
+            color: white;
+            font-weight: 900;
+            letter-spacing: 3px;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-add:hover {
+            box-shadow: 0 0 20px rgba(55, 179, 111, 0.5);
+            background: #37b36f;
+        }
+
+        /* 4. CART ITEMS */
+        .item-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bold-currency {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            color: var(--primary-green);
+        }
+
+        .btn-del {
+            background: transparent;
+            border: none;
+            color: #ff4b4b;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        /* 5. TOTAL VALUATION */
+        .valuation-card {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(55, 179, 111, 0.1);
+            text-align: center;
+            margin-top: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .val-title {
+            letter-spacing: 5px;
+            color: var(--primary-green);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .val-main {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin: 10px 0;
+        }
+
+        .val-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .clear-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div style="display: flex;  align-items: center;">
+            <span> <img src="./wlogo.png" alt="Logo" class="logo"></span>
+            <span style="color: var(--primary-green); font-size: 4.9rem; font-weight:900;">Bayut Studios</span>
+        </div>
+        <h1 class="rich-header">Price Calculator</h1>
+
+        <div class="glass-panel">
+            <label style="color: white;margin: 10px 0 50px 0;text-align: center;">CONFIGURE YOUR PROJECT SCOPE</label>
+            <div class="form-group">
+                <label>CATEGORY</label>
+                <select id="categorySelect" onchange="updateProductList()"></select>
+            </div>
+            <div class="form-group">
+                <label>PRODUCT SERVICE</label>
+                <select id="productSelect"></select>
+            </div>
+            <div class="form-group">
+                <label>UNITS REQUIRED</label>
+                <input type="number" id="unitsInput" value="1" min="1">
+            </div>
+            <button class="btn-add" onclick="addToCart()">Add to Quotation</button>
+        </div>
+
+        <h3 id="scopeHeader" style="display:none;">CURRENT SCOPE</h3>
+        <div id="cartItems"></div>
+
+        <div id="valuationCard" class="valuation-card" style="display:none;">
+            <p class="val-title">✦ TOTAL VALUATION ✦</p>
+            <h1 class="val-main" id="totalPKR">PKR 0</h1>
+            <div class="val-grid">
+                <div>
+                    <p style="color: var(--primary-green); font-size: 0.9rem; font-weight:900;">SAR</p>
+                    <h2 id="totalSAR" style="margin:0;">0.00</h2>
+                </div>
+                <div>
+                    <p style="color: var(--primary-green); font-size: 0.9rem; font-weight:900;">AED</p>
+                    <h2 id="totalAED" style="margin:0;">0.00</h2>
+                </div>
+            </div>
+            <button class="clear-btn" onclick="clearCart()">CLEAR ALL QUOTATION</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA HUB (Replace with your Sheet data) ---
+        const serviceData = [
+            { category: "Photography", name: "Event Shoot", pkr: 50000, sar: 675, aed: 660 },
+            { category: "Photography", name: "Product Shoot", pkr: 25000, sar: 337, aed: 330 },
+            { category: "Videography", name: "Social Media Reel", pkr: 15000, sar: 202, aed: 198 },
+            { category: "Videography", name: "Corporate Video", pkr: 120000, sar: 1620, aed: 1585 }
+        ];
+
+        let cart = [];
+
+        // Initialize Select Boxes
+        function init() {
+            const catSelect = document.getElementById('categorySelect');
+            const categories = [...new Set(serviceData.map(item => item.category))];
+
+            categories.forEach(cat => {
+                let opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerHTML = cat;
+                catSelect.appendChild(opt);
+            });
+            updateProductList();
+        }
+
+        function updateProductList() {
+            const cat = document.getElementById('categorySelect').value;
+            const prodSelect = document.getElementById('productSelect');
+            prodSelect.innerHTML = "";
+
+            serviceData.filter(i => i.category === cat).forEach(prod => {
+                let opt = document.createElement('option');
+                opt.value = prod.name;
+                opt.innerHTML = prod.name;
+                prodSelect.appendChild(opt);
+            });
+        }
+
+        function addToCart() {
+            const prodName = document.getElementById('productSelect').value;
+            const units = parseInt(document.getElementById('unitsInput').value);
+            const itemData = serviceData.find(i => i.name === prodName);
+
+            const existing = cart.find(i => i.name === prodName);
+            if (existing) {
+                existing.units += units;
+            } else {
+                cart.push({
+                    name: prodName,
+                    units: units,
+                    pkr: itemData.pkr,
+                    sar: itemData.sar,
+                    aed: itemData.aed
+                });
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const valuationCard = document.getElementById('valuationCard');
+            const scopeHeader = document.getElementById('scopeHeader');
+            container.innerHTML = "";
+
+            if (cart.length === 0) {
+                valuationCard.style.display = "none";
+                scopeHeader.style.display = "none";
+                return;
+            }
+
+            valuationCard.style.display = "block";
+            scopeHeader.style.display = "block";
+
+            let totalPKR = 0, totalSAR = 0, totalAED = 0;
+
+            cart.forEach((item, index) => {
+                const subPKR = item.pkr * item.units;
+                const subSAR = item.sar * item.units;
+                const subAED = item.aed * item.units;
+
+                totalPKR += subPKR;
+                totalSAR += subSAR;
+                totalAED += subAED;
+
+                container.innerHTML += `
+                <div class="item-card">
+                    <div>
+                        <b style="font-size: 1.1rem;">${item.name} (x${item.units})</b>
+                        <p style="margin:5px 0 0 0; font-size:0.9rem;">
+                            <span class="bold-currency">SAR ${subSAR.toLocaleString()}</span> | 
+                            <span class="bold-currency">AED ${subAED.toLocaleString()}</span>
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <b style="font-size: 1.2rem;">PKR ${subPKR.toLocaleString()}</b>
+                        <button class="btn-del" onclick="removeItem(${index})">×</button>
+                    </div>
+                </div>
+            `;
+            });
+
+            document.getElementById('totalPKR').innerText = `PKR ${totalPKR.toLocaleString()}`;
+            document.getElementById('totalSAR').innerText = totalSAR.toLocaleString(undefined, { minimumFractionDigits: 2 });
+            document.getElementById('totalAED').innerText = totalAED.toLocaleString(undefined, { minimumFractionDigits: 2 });
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            renderCart();
+        }
+
+        init();
+    </script>
+
+</body>
+
+</html>
