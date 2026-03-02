@@ -21,6 +21,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-x: hidden;
         }
 
         /* Starry Background */
@@ -46,9 +47,36 @@
 
         .container { width: 100%; max-width: 750px; padding: 20px; text-align: center; }
 
-        .logo-area { font-size: 3.5rem; font-weight: 900; color: var(--primary-green); margin-bottom: 5px; }
-        .rich-header { font-size: 1.8rem; letter-spacing: 10px; text-transform: uppercase; margin-bottom: 30px; }
+        /* Logo and Header Section */
+        .brand-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
 
+        .logo-img {
+            height: 60px; /* Adjusted to match text height */
+            width: auto;
+        }
+
+        .logo-text { 
+            font-size: 3.5rem; 
+            font-weight: 900; 
+            color: var(--primary-green); 
+            margin: 0;
+        }
+
+        .rich-header { 
+            font-size: 1.8rem; 
+            letter-spacing: 10px; 
+            text-transform: uppercase; 
+            margin-bottom: 30px; 
+            font-weight: 200;
+        }
+
+        /* Calculator UI */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -59,9 +87,11 @@
         }
 
         label { color: var(--primary-green); font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; display: block; margin-bottom: 8px; }
+        
         select, input {
             width: 100%; padding: 12px; background: #000; border: 1px solid var(--glass-border);
             color: white; border-radius: 6px; margin-bottom: 20px; font-family: inherit;
+            box-sizing: border-box;
         }
 
         .btn-add {
@@ -70,10 +100,25 @@
             border-radius: 8px; cursor: pointer; transition: 0.3s;
         }
 
+        .btn-add:hover {
+            box-shadow: 0 0 15px var(--primary-green);
+            transform: translateY(-2px);
+        }
+
         /* Results Card */
         .valuation-card {
-            margin-top: 30px; background: rgba(55, 179, 111, 0.1); border: 1px solid var(--primary-green);
-            border-radius: 15px; padding: 25px; display: none;
+            margin-top: 30px; 
+            background: rgba(55, 179, 111, 0.1); 
+            border: 1px solid var(--primary-green);
+            border-radius: 15px; 
+            padding: 25px; 
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -81,12 +126,15 @@
     <div class="stars" id="starField"></div>
 
     <div class="container">
-        <div class="logo-area">Bayut Studios</div>
+        <div class="brand-container">
+            <img src="wlogo.png" alt="Bayut Studios Logo" class="logo-img">
+            <h1 class="logo-text">Bayut Studios</h1>
+        </div>
         <div class="rich-header">Price Calculator</div>
 
         <div class="glass-panel">
             <label>CATEGORY</label>
-            <select id="catSelect" onchange="updateProducts()"><option>Loading...</option></select>
+            <select id="catSelect" onchange="updateProducts()"><option>Loading Data...</option></select>
 
             <label>PRODUCT SERVICE</label>
             <select id="prodSelect"><option>Select Category First</option></select>
@@ -98,20 +146,20 @@
         </div>
 
         <div id="resultCard" class="valuation-card">
-            <p style="color: var(--primary-green); font-weight: 700;">TOTAL VALUATION</p>
+            <p style="color: var(--primary-green); font-weight: 700; margin: 0; letter-spacing: 2px;">TOTAL VALUATION</p>
             <h1 id="resPKR" style="font-size: 3rem; margin: 10px 0;">PKR 0</h1>
             <div style="display: flex; justify-content: center; gap: 30px;">
-                <div><small>SAR</small><br><b id="resSAR">0</b></div>
-                <div><small>AED</small><br><b id="resAED">0</b></div>
+                <div><small style="opacity: 0.6;">SAR</small><br><b id="resSAR" style="font-size: 1.2rem;">0</b></div>
+                <div><small style="opacity: 0.6;">AED</small><br><b id="resAED" style="font-size: 1.2rem;">0</b></div>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURATION
+        // CONFIGURATION - Pointing to the specific GSheet ID
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        const GID = '0';
-        const DATA_URL = `https://docs.google.com/spreadsheets/d/1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g/edit?usp=sharing`;
+        // Using Gviz API to fetch specific data
+        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
         let rawData = [];
 
@@ -119,15 +167,21 @@
         fetch(DATA_URL)
             .then(res => res.text())
             .then(text => {
+                // Slice text to handle the JSON response from Google Gviz
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 rawData = json.table.rows.map(row => ({
                     category: row.c[0]?.v,
                     product: row.c[1]?.v,
-                    pkr: row.c[3]?.v || 0, // Total Price (PKR)
-                    sar: row.c[6]?.v || 0, // Total Price (SAR)
-                    aed: row.c[7]?.v || 0  // Total Price (AED)
+                    pkr: row.c[2]?.v || 0, // PKR
+                    usd: row.c[3]?.v || 0, // USD
+                    sar: row.c[4]?.v || 0, // SAR
+                    aed: row.c[5]?.v || 0  // AED
                 }));
                 init();
+            })
+            .catch(err => {
+                console.error("Error loading sheet:", err);
+                document.getElementById('catSelect').innerHTML = "<option>Error Loading Sheet</option>";
             });
 
         function init() {
@@ -147,20 +201,21 @@
 
         function calculate() {
             const pName = document.getElementById('prodSelect').value;
-            const units = document.getElementById('unitInput').value;
+            const units = parseInt(document.getElementById('unitInput').value) || 1;
             const item = rawData.find(i => i.product === pName);
             
             if(item) {
+                // Handle calculations based on numeric values in spreadsheet
                 document.getElementById('resPKR').innerText = `PKR ${(item.pkr * units).toLocaleString()}`;
-                document.getElementById('resSAR').innerText = (item.sar * units).toLocaleString();
-                document.getElementById('resAED').innerText = (item.aed * units).toLocaleString();
+                document.getElementById('resSAR').innerText = (item.sar * units).toLocaleString(undefined, {minimumFractionDigits: 2});
+                document.getElementById('resAED').innerText = (item.aed * units).toLocaleString(undefined, {minimumFractionDigits: 2});
                 document.getElementById('resultCard').style.display = 'block';
             }
         }
 
-        // Generate Stars
+        // Star Generation
         const field = document.getElementById('starField');
-        for(let i=0; i<100; i++) {
+        for(let i=0; i<120; i++) {
             const s = document.createElement('div');
             s.className = 'star';
             const size = Math.random() * 2 + 1 + 'px';
