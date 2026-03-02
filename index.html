@@ -48,13 +48,15 @@
         .container { width: 100%; max-width: 750px; padding: 20px; text-align: center; }
 
         /* Logo and Header Section */
-        .brand-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 5px;
-        }
+       <div class="brand-container">
+    <img src="./wlogo.png" 
+         alt="Bayut Studios Logo" 
+         class="logo-img" 
+         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline'">
+    
+    <span id="logo-fallback" style="display:none; font-size: 2rem; margin-right: 10px;">🏠</span>
+    <h1 class="logo-text">Bayut Studios</h1>
+</div>
 
         .logo-img {
             height: 60px; /* Adjusted to match text height */
