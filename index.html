@@ -24,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* Starry Background */
         .stars {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -47,19 +46,16 @@
 
         .container { width: 100%; max-width: 750px; padding: 20px; text-align: center; }
 
-        /* Logo and Header Section */
-       <div class="brand-container">
-    <img src="./wlogo.png" 
-         alt="Bayut Studios Logo" 
-         class="logo-img" 
-         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline'">
-    
-    <span id="logo-fallback" style="display:none; font-size: 2rem; margin-right: 10px;">🏠</span>
-    <h1 class="logo-text">Bayut Studios</h1>
-</div>
+        .brand-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
 
         .logo-img {
-            height: 60px; /* Adjusted to match text height */
+            height: 60px;
             width: auto;
         }
 
@@ -78,7 +74,6 @@
             font-weight: 200;
         }
 
-        /* Calculator UI */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -107,7 +102,6 @@
             transform: translateY(-2px);
         }
 
-        /* Results Card */
         .valuation-card {
             margin-top: 30px; 
             background: rgba(55, 179, 111, 0.1); 
@@ -129,7 +123,11 @@
 
     <div class="container">
         <div class="brand-container">
-            <img src="/wlogo.png" alt="Bayut Studios Logo" class="logo-img">
+            <img src="wlogo.png" 
+                 alt="Bayut Studios Logo" 
+                 class="logo-img" 
+                 onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline'">
+            <span id="logo-fallback" style="display:none; font-size: 2.5rem; margin-right: 10px;">🏠</span>
             <h1 class="logo-text">Bayut Studios</h1>
         </div>
         <div class="rich-header">Price Calculator</div>
@@ -158,26 +156,22 @@
     </div>
 
     <script>
-        // CONFIGURATION - Pointing to the specific GSheet ID
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        // Using Gviz API to fetch specific data
         const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
         let rawData = [];
 
-        // Fetch Data from Google Sheet
         fetch(DATA_URL)
             .then(res => res.text())
             .then(text => {
-                // Slice text to handle the JSON response from Google Gviz
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 rawData = json.table.rows.map(row => ({
                     category: row.c[0]?.v,
                     product: row.c[1]?.v,
-                    pkr: row.c[2]?.v || 0, // PKR
-                    usd: row.c[3]?.v || 0, // USD
-                    sar: row.c[4]?.v || 0, // SAR
-                    aed: row.c[5]?.v || 0  // AED
+                    pkr: row.c[2]?.v || 0,
+                    usd: row.c[3]?.v || 0,
+                    sar: row.c[4]?.v || 0,
+                    aed: row.c[5]?.v || 0 
                 }));
                 init();
             })
@@ -207,7 +201,6 @@
             const item = rawData.find(i => i.product === pName);
             
             if(item) {
-                // Handle calculations based on numeric values in spreadsheet
                 document.getElementById('resPKR').innerText = `PKR ${(item.pkr * units).toLocaleString()}`;
                 document.getElementById('resSAR').innerText = (item.sar * units).toLocaleString(undefined, {minimumFractionDigits: 2});
                 document.getElementById('resAED').innerText = (item.aed * units).toLocaleString(undefined, {minimumFractionDigits: 2});
@@ -215,7 +208,6 @@
             }
         }
 
-        // Star Generation
         const field = document.getElementById('starField');
         for(let i=0; i<120; i++) {
             const s = document.createElement('div');
