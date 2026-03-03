@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayut Studios | Project Cart Engine</title>
+    <title>Bayut Studios | Quotation Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,7 +12,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        /* --- SCREEN ONLY STYLES --- */
+        /* --- SCREEN UI --- */
         @media screen {
             body {
                 background-color: #000;
@@ -21,54 +21,47 @@
                 margin: 0;
                 min-height: 100vh;
                 overflow-x: hidden;
-                padding-bottom: 80px;
             }
-
             .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
             .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
             @keyframes glisten { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.3); } }
 
             .container { width: 90%; max-width: 850px; margin: 40px auto; text-align: center; }
             .logo-text { font-size: 3.5rem; font-weight: 900; color: var(--primary-green); margin: 0; }
-            .rich-header { font-size: 1.2rem; letter-spacing: 12px; text-transform: uppercase; margin-bottom: 30px; font-weight: 200; opacity: 0.8; }
-
             .glass-panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 35px; text-align: left; margin-bottom: 40px; }
             label { color: var(--primary-green); font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; display: block; margin-bottom: 8px; }
             select, input { width: 100%; padding: 14px; background: #000; border: 1px solid var(--glass-border); color: white; border-radius: 8px; margin-bottom: 20px; font-family: inherit; box-sizing: border-box; }
-
+            
             .btn-primary { width: 100%; padding: 18px; background: var(--primary-green); border: none; color: white; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; border-radius: 10px; cursor: pointer; transition: 0.3s; margin-top: 10px;}
             .btn-primary:hover { box-shadow: 0 0 20px var(--primary-green); transform: translateY(-2px); }
 
-            .cart-item { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 15px; padding: 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+            .cart-item { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 15px; padding: 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; text-align: left;}
             .item-details h4 { margin: 0; font-size: 1.1rem; color: #fff; }
-            .item-details p { margin: 5px 0 0 0; font-size: 0.8rem; color: #888; }
-            .item-pricing { text-align: right; margin-right: 25px; }
+            .item-pricing { text-align: right; margin-right: 20px; }
             .pkr-price { display: block; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.2rem; }
-            .other-price { font-size: 0.75rem; color: #666; font-weight: 700; }
-
-            .btn-del { background: var(--primary-green); color: #000; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+            .btn-del { background: var(--primary-green); color: #000; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
             
             .valuation-card { margin-top: 50px; background: linear-gradient(145deg, rgba(55, 179, 111, 0.15), rgba(0,0,0,0.5)); border: 2px solid var(--primary-green); border-radius: 20px; padding: 40px; backdrop-filter: blur(15px); }
-            .grand-total { font-size: 3.5rem; font-weight: 900; margin: 15px 0; font-family: 'Inter', sans-serif; }
-            #invoice-print-area { display: none; }
+            #invoice-print-area { display: none; } /* HIDDEN ON SCREEN */
         }
 
-        /* --- PRINT ONLY STYLES (SLEEK INVOICE) --- */
+        /* --- PRINT VIEW (SLEEK INVOICE) --- */
         @media print {
-            body { background: white !important; color: black !important; font-family: 'Inter', sans-serif; }
-            .stars, .glass-panel, .btn-primary, .btn-del, .rich-header, .brand-container, .cart-item, #starField, button { display: none !important; }
+            @page { size: A4; margin: 0; }
+            body { background: white !important; color: black !important; padding: 0; margin: 0; }
+            .container, .stars, #starField, button { display: none !important; }
             
-            #invoice-print-area { display: block !important; padding: 40px; }
-            .print-header { border-bottom: 4px solid #37b36f; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-            .print-logo { font-size: 28px; font-weight: 900; color: #37b36f; text-transform: uppercase; }
+            #invoice-print-area { display: block !important; padding: 50px; background: white; min-height: 100vh; }
+            .invoice-header { border-bottom: 5px solid #37b36f; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+            .invoice-title { font-size: 32px; font-weight: 900; color: #37b36f; }
             
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th { text-align: left; background: #f4f4f4; padding: 12px; font-size: 12px; text-transform: uppercase; }
-            td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            th { text-align: left; background: #f9f9f9; padding: 15px; font-size: 12px; border-bottom: 2px solid #37b36f; }
+            td { padding: 15px; border-bottom: 1px solid #eee; font-size: 14px; }
             
-            .print-total-box { margin-top: 40px; text-align: right; border-top: 2px solid black; padding-top: 20px; }
-            .print-total-row { font-size: 24px; font-weight: 900; color: black; }
-            .print-footer { margin-top: 100px; font-size: 10px; color: #999; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
+            .total-section { margin-top: 50px; text-align: right; }
+            .total-pkr { font-size: 30px; font-weight: 900; color: black; margin-bottom: 10px; }
+            .footer { position: absolute; bottom: 50px; left: 50px; right: 50px; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
         }
     </style>
 </head>
@@ -76,66 +69,71 @@
     <div class="stars" id="starField"></div>
 
     <div class="container">
-        <div class="brand-container">
-            <h1 class="logo-text">Bayut Studios</h1>
-        </div>
-        <div class="rich-header">Project Cart Engine</div>
+        <h1 class="logo-text">Bayut Studios</h1>
+        <div style="letter-spacing: 8px; font-weight: 200; margin-bottom: 40px; opacity: 0.6;">PROJECT PORTAL</div>
 
         <div class="glass-panel">
-            <label>PROJECT CATEGORY</label>
-            <select id="catSelect" onchange="updateProducts()"><option>Syncing Data...</option></select>
-            <label>SERVICE PRODUCT</label>
-            <select id="prodSelect"><option>Select Category First</option></select>
+            <label>CATEGORY</label>
+            <select id="catSelect" onchange="updateProducts()"><option>Syncing Engine...</option></select>
+            <label>SERVICE</label>
+            <select id="prodSelect"></select>
             <label>QUANTITY</label>
             <input type="number" id="unitInput" value="1" min="1">
             <button class="btn-primary" onclick="addToProject()">Add to Project</button>
         </div>
 
-        <div id="projectScope" style="display: none;">
+        <div id="cartSection" style="display:none;">
             <div id="cartList"></div>
             <div class="valuation-card">
-                <p style="color: var(--primary-green); font-weight: 700; margin: 0; letter-spacing: 4px; font-size: 0.8rem;">TOTAL VALUATION</p>
-                <h1 id="resPKR" class="grand-total">PKR 0</h1>
-                <div style="display: flex; justify-content: center; gap: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;">
-                    <div><small style="opacity: 0.5;">SAR TOTAL</small><br><b id="resSAR" style="font-size: 1.6rem; color: var(--primary-green);">0</b></div>
-                    <div><small style="opacity: 0.5;">UAE TOTAL</small><br><b id="resAED" style="font-size: 1.6rem; color: var(--primary-green);">0</b></div>
+                <p style="color: var(--primary-green); font-weight: 700; letter-spacing: 3px;">TOTAL PROJECT VALUATION</p>
+                <h1 id="resPKR" style="font-size: 3.5rem; font-weight: 900; margin: 15px 0;">PKR 0</h1>
+                <div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 30px;">
+                    <div><small>SAR</small><br><b id="resSAR" style="font-size: 1.5rem; color: var(--primary-green);">0</b></div>
+                    <div><small>AED</small><br><b id="resAED" style="font-size: 1.5rem; color: var(--primary-green);">0</b></div>
                 </div>
-                <button class="btn-primary" onclick="window.print()">Download Quotation (PDF)</button>
-                <button onclick="clearProject()" style="background:transparent; border:none; color:#444; margin-top:20px; cursor:pointer; font-weight:700;">Reset All</button>
+                <button class="btn-primary" onclick="window.print()">GET QUOTATION (PDF)</button>
+                <br><br>
+                <span onclick="clearAll()" style="cursor:pointer; opacity:0.4; font-size:0.8rem; letter-spacing:2px;">RESET SCOPE</span>
             </div>
         </div>
     </div>
 
     <div id="invoice-print-area">
-        <div class="print-header">
-            <div class="print-logo">Bayut Studios | Official Quotation</div>
-            <div style="text-align: right; font-size: 12px;">Date: <span id="print-date"></span></div>
+        <div class="invoice-header">
+            <div>
+                <div class="invoice-title">BAYUT STUDIOS</div>
+                <div style="font-size: 14px; letter-spacing: 2px;">OFFICIAL PROJECT QUOTATION</div>
+            </div>
+            <div style="text-align: right;">
+                <div id="inv-date"></div>
+                <div style="color: #37b36f; font-weight: 700;">Ref: #BS-2024</div>
+            </div>
         </div>
         
         <table>
             <thead>
                 <tr>
-                    <th>Service Description</th>
-                    <th>Qty</th>
-                    <th>Unit Price (PKR)</th>
-                    <th>Total (PKR)</th>
+                    <th>SERVICE DESCRIPTION</th>
+                    <th>QTY</th>
+                    <th>UNIT PRICE</th>
+                    <th>TOTAL (PKR)</th>
                 </tr>
             </thead>
-            <tbody id="print-table-body"></tbody>
+            <tbody id="print-rows"></tbody>
         </table>
 
-        <div class="print-total-box">
-            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">GRAND TOTAL VALUATION</div>
-            <div class="print-total-row" id="print-total-pkr"></div>
-            <div style="font-weight: 700; margin-top: 10px;">
-                SAR Total: <span id="print-total-sar"></span><br>
-                UAE (AED) Total: <span id="print-total-aed"></span>
+        <div class="total-section">
+            <div style="font-size: 14px; color: #777;">GRAND TOTAL</div>
+            <div class="total-pkr" id="print-pkr"></div>
+            <div style="font-weight: 700; font-size: 16px;">
+                SAR Total: <span id="print-sar"></span><br>
+                AED Total: <span id="print-aed"></span>
             </div>
         </div>
 
-        <div class="print-footer">
-            <p>This is a computer-generated quotation by Bayut Studios. Prices are subject to change based on project scope modifications.</p>
-            <p>www.bayutstudios.com | hello@bayutstudios.com</p>
+        <div class="footer">
+            <p>This quotation is valid for 15 days. All prices include applicable studio service fees.</p>
+            <p>Bayut Studios | www.bayutstudios.com | Strategic Creative Solutions</p>
         </div>
     </div>
 
@@ -143,124 +141,87 @@
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
         const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-        let masterData = [];
-        let projectCart = [];
+        let db = [];
+        let cart = [];
 
-        function cleanValue(val) {
-            if (!val) return 0;
-            return parseFloat(String(val).replace(/[PKR|SAR|dh|\$|,]/gi, '')) || 0;
-        }
+        function clean(v) { return v ? parseFloat(String(v).replace(/[PKR|SAR|dh|\$|,]/gi, '')) : 0; }
 
-        fetch(DATA_URL).then(res => res.text()).then(text => {
-            const json = JSON.parse(text.substr(47).slice(0, -2));
-            masterData = json.table.rows.map(row => {
-                const c = row.c;
-                if (!c[0] || !c[1]) return null;
-                return { category: c[0].v, product: c[1].v, baseQty: cleanValue(c[2]?.v) || 1, pkr: cleanValue(c[4]?.v), sar: cleanValue(c[6]?.v), aed: cleanValue(c[7]?.v) };
-            }).filter(i => i !== null);
+        fetch(DATA_URL).then(r => r.text()).then(t => {
+            const j = JSON.parse(t.substr(47).slice(0, -2));
+            db = j.table.rows.map(r => {
+                const c = r.c;
+                return c[0] && c[1] ? { cat: c[0].v, name: c[1].v, bQty: clean(c[2]?.v)||1, pkr: clean(c[4]?.v), sar: clean(c[6]?.v), aed: clean(c[7]?.v) } : null;
+            }).filter(x => x);
             
-            const cats = [...new Set(masterData.map(i => i.category))].filter(Boolean);
+            const cats = [...new Set(db.map(i => i.cat))];
             const sel = document.getElementById('catSelect');
-            sel.innerHTML = '<option value="">Select Category</option>';
-            cats.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
+            sel.innerHTML = '<option value="">Select Category</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
         });
 
         function updateProducts() {
             const cat = document.getElementById('catSelect').value;
             const sel = document.getElementById('prodSelect');
-            sel.innerHTML = '<option value="">Select Service</option>';
-            masterData.filter(i => i.category === cat).forEach(i => sel.innerHTML += `<option value="${i.product}">${i.product}</option>`);
+            sel.innerHTML = db.filter(i => i.cat === cat).map(i => `<option value="${i.name}">${i.name}</option>`).join('');
         }
 
         function addToProject() {
-            const pName = document.getElementById('prodSelect').value;
-            const userQty = parseInt(document.getElementById('unitInput').value) || 1;
-            const item = masterData.find(i => i.product === pName);
+            const name = document.getElementById('prodSelect').value;
+            const qty = parseInt(document.getElementById('unitInput').value) || 1;
+            const item = db.find(i => i.name === name);
             
             if(item) {
-                const unitPKR = item.pkr / item.baseQty;
-                const unitSAR = item.sar / item.baseQty;
-                const unitAED = item.aed / item.baseQty;
-
-                const existingItem = projectCart.find(cartItem => cartItem.name === item.product);
-                if (existingItem) {
-                    existingItem.qty += userQty;
-                    existingItem.totalPKR += unitPKR * userQty;
-                    existingItem.totalSAR += unitSAR * userQty;
-                    existingItem.totalAED += unitAED * userQty;
+                const existing = cart.find(c => c.name === name);
+                const uP = item.pkr/item.bQty, uS = item.sar/item.bQty, uA = item.aed/item.bQty;
+                
+                if(existing) {
+                    existing.qty += qty;
+                    existing.tP += uP * qty; existing.tS += uS * qty; existing.tA += uA * qty;
                 } else {
-                    projectCart.push({ name: item.product, qty: userQty, unitPKR: unitPKR, totalPKR: unitPKR * userQty, totalSAR: unitSAR * userQty, totalAED: unitAED * userQty, id: Date.now() });
+                    cart.push({ name, qty, uP, tP: uP*qty, tS: uS*qty, tA: uA*qty });
                 }
-                renderCart();
+                render();
             }
         }
 
-        function removeFromProject(id) {
-            projectCart = projectCart.filter(item => item.id !== id);
-            renderCart();
-        }
-
-        function clearProject() {
-            projectCart = [];
-            renderCart();
-        }
-
-        function renderCart() {
-            const scopeDiv = document.getElementById('projectScope');
-            const listDiv = document.getElementById('cartList');
-            const printBody = document.getElementById('print-table-body');
+        function render() {
+            const list = document.getElementById('cartList');
+            const printList = document.getElementById('print-rows');
+            document.getElementById('cartSection').style.display = cart.length ? 'block' : 'none';
             
-            if(projectCart.length === 0) { scopeDiv.style.display = 'none'; return; }
+            list.innerHTML = ''; printList.innerHTML = '';
+            let T_P = 0, T_S = 0, T_A = 0;
 
-            scopeDiv.style.display = 'block';
-            listDiv.innerHTML = '';
-            printBody.innerHTML = '';
-
-            let totalPKR = 0, totalSAR = 0, totalAED = 0;
-
-            projectCart.forEach(item => {
-                totalPKR += item.totalPKR; totalSAR += item.totalSAR; totalAED += item.totalAED;
+            cart.forEach((item, idx) => {
+                T_P += item.tP; T_S += item.tS; T_A += item.tA;
+                list.innerHTML += `<div class="cart-item">
+                    <div class="item-details"><h4>${item.name}</h4><p>Quantity: <b>${item.qty}</b></p></div>
+                    <div class="item-pricing"><span class="pkr-price">PKR ${item.tP.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+                    <small style="color:#555;">SAR ${item.tS.toLocaleString(undefined,{minimumFractionDigits:2})}</small></div>
+                    <button class="btn-del" onclick="cart.splice(${idx},1);render()">×</button></div>`;
                 
-                // Screen UI
-                listDiv.innerHTML += `
-                    <div class="cart-item">
-                        <div class="item-details"><h4>${item.name}</h4><p>QTY: <b>${item.qty}</b></p></div>
-                        <div class="item-pricing">
-                            <span class="pkr-price">PKR ${item.totalPKR.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
-                            <div class="other-price">SAR ${item.totalSAR.toLocaleString(undefined, {minimumFractionDigits:2})} | UAE ${item.totalAED.toLocaleString(undefined, {minimumFractionDigits:2})}</div>
-                        </div>
-                        <button class="btn-del" onclick="removeFromProject(${item.id})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
-                    </div>`;
-
-                // Print UI
-                printBody.innerHTML += `
-                    <tr>
-                        <td>${item.name}</td>
-                        <td>${item.qty}</td>
-                        <td>${item.unitPKR.toLocaleString()}</td>
-                        <td>${item.totalPKR.toLocaleString()}</td>
-                    </tr>`;
+                printList.innerHTML += `<tr><td>${item.name}</td><td>${item.qty}</td><td>${item.uP.toLocaleString()}</td><td>${item.tP.toLocaleString()}</td></tr>`;
             });
 
-            document.getElementById('resPKR').innerText = `PKR ${totalPKR.toLocaleString(undefined, {maximumFractionDigits:0})}`;
-            document.getElementById('resSAR').innerText = totalSAR.toLocaleString(undefined, {minimumFractionDigits:2});
-            document.getElementById('resAED').innerText = totalAED.toLocaleString(undefined, {minimumFractionDigits:2});
+            document.getElementById('resPKR').innerText = `PKR ${T_P.toLocaleString(undefined,{maximumFractionDigits:0})}`;
+            document.getElementById('resSAR').innerText = T_S.toLocaleString(undefined,{minimumFractionDigits:2});
+            document.getElementById('resAED').innerText = T_A.toLocaleString(undefined,{minimumFractionDigits:2});
             
-            document.getElementById('print-total-pkr').innerText = `PKR ${totalPKR.toLocaleString()}`;
-            document.getElementById('print-total-sar').innerText = totalSAR.toLocaleString();
-            document.getElementById('print-total-aed').innerText = totalAED.toLocaleString();
-            document.getElementById('print-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('print-pkr').innerText = `PKR ${T_P.toLocaleString()}`;
+            document.getElementById('print-sar').innerText = T_S.toLocaleString();
+            document.getElementById('print-aed').innerText = T_A.toLocaleString();
+            document.getElementById('inv-date').innerText = new Date().toLocaleDateString();
         }
 
-        const field = document.getElementById('starField');
+        function clearAll() { cart = []; render(); }
+
+        const f = document.getElementById('starField');
         for(let i=0; i<120; i++) {
-            const s = document.createElement('div');
-            s.className = 'star';
-            const size = Math.random() * 2 + 1 + 'px';
-            s.style.width = size; s.style.height = size;
-            s.style.top = Math.random() * 100 + '%'; s.style.left = Math.random() * 100 + '%';
-            s.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
-            field.appendChild(s);
+            const s = document.createElement('div'); s.className = 'star';
+            const sz = Math.random() * 2 + 1 + 'px';
+            s.style.width = sz; s.style.height = sz;
+            s.style.top = Math.random()*100+'%'; s.style.left = Math.random()*100+'%';
+            s.style.setProperty('--duration', Math.random()*3+2+'s');
+            f.appendChild(s);
         }
     </script>
 </body>
