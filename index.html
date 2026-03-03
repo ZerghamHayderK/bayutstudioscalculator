@@ -137,7 +137,7 @@
         <div class="total-section">
             <div style="font-size: 12px; color: #777; text-transform: uppercase;">Grand Total Valuation</div>
             <div class="total-pkr" id="print-pkr"></div>
-            <div style="font-weight: 700; font-size: 10px; margin-top: 5px;">
+            <div style="font-weight: 700; font-size: 14px; margin-top: 5px;">
                 SAR: <span id="print-sar"></span> | AED: <span id="print-aed"></span>
             </div>
         </div>
@@ -181,28 +181,35 @@
             const item = db.find(i => i.name === name);
             
             if(item) {
-                // Determine base unit cost (removing the default 7% margin assumed in sheet if necessary, 
-                // but here we apply the new margin on top of base sheet price)
+                // Determine base unit cost (assuming sheet prices already include a 7% margin, we calculate the base cost first)
+                // If the sheet price is Cost * 1.07, then Cost = Sheet Price / 1.07
+                const baseUnitPKR = (item.pkr / item.baseQty) / 1.07;
+                const baseUnitSAR = (item.sar / item.baseQty) / 1.07;
+                const baseUnitAED = (item.aed / item.baseQty) / 1.07;
+
+                // Apply the new dynamic margin
                 const marginMultiplier = 1 + (marginPercent / 100);
                 
-                const unitPKR = (item.pkr / item.baseQty) * marginMultiplier;
-                const unitSAR = (item.sar / item.baseQty) * marginMultiplier;
-                const unitAED = (item.aed / item.baseQty) * marginMultiplier;
+                const finalUnitPKR = baseUnitPKR * marginMultiplier;
+                const finalUnitSAR = baseUnitSAR * marginMultiplier;
+                const finalUnitAED = baseUnitAED * marginMultiplier;
 
-                // Smart Merge Logic
+                // Smart Merge Logic: checks if item name AND margin match
                 const existing = cart.find(c => c.name === name && c.margin === marginPercent);
                 if(existing) {
                     existing.qty += qty;
-                    existing.tP += unitPKR * qty; existing.tS += unitSAR * qty; existing.tA += unitAED * qty;
+                    existing.tP += finalUnitPKR * qty; 
+                    existing.tS += finalUnitSAR * qty; 
+                    existing.tA += finalUnitAED * qty;
                 } else {
                     cart.push({ 
                         name, 
                         qty, 
                         margin: marginPercent,
-                        uP: unitPKR, 
-                        tP: unitPKR * qty, 
-                        tS: unitSAR * qty, 
-                        tA: unitAED * qty 
+                        uP: finalUnitPKR, 
+                        tP: finalUnitPKR * qty, 
+                        tS: finalUnitSAR * qty, 
+                        tA: finalUnitAED * qty 
                     });
                 }
                 render();
@@ -252,7 +259,6 @@
 
         function clearAll() { cart = []; render(); }
 
-        // Background logic
         const f = document.getElementById('starField');
         for(let i=0; i<150; i++) {
             const s = document.createElement('div'); s.className = 'star';
