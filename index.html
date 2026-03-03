@@ -143,7 +143,7 @@
                 <h1 id="resPKR" class="grand-total">PKR 0</h1>
                 <div style="display: flex; justify-content: center; gap: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;">
                     <div><small style="opacity: 0.5; letter-spacing: 2px;">SAR TOTAL</small><br><b id="resSAR" style="font-size: 1.6rem; font-family: 'Inter'; font-weight: 900; color: var(--primary-green);">0</b></div>
-                    <div><small style="opacity: 0.5; letter-spacing: 2px;">AED TOTAL</small><br><b id="resAED" style="font-size: 1.6rem; font-family: 'Inter'; font-weight: 900; color: var(--primary-green);">0</b></div>
+                    <div><small style="opacity: 0.5; letter-spacing: 2px;">UAE TOTAL</small><br><b id="resAED" style="font-size: 1.6rem; font-family: 'Inter'; font-weight: 900; color: var(--primary-green);">0</b></div>
                 </div>
                 <button onclick="clearProject()" style="background:transparent; border:none; color:#444; margin-top:30px; cursor:pointer; font-weight: 700; letter-spacing: 2px;">RESET ALL</button>
             </div>
@@ -199,19 +199,31 @@
             const item = masterData.find(i => i.product === pName);
             
             if(item) {
-                // Calculate individual unit price correctly
                 const unitPKR = item.pkr / item.baseQty;
                 const unitSAR = item.sar / item.baseQty;
                 const unitAED = item.aed / item.baseQty;
 
-                projectCart.push({
-                    name: item.product,
-                    qty: userQty,
-                    pkr: unitPKR * userQty,
-                    sar: unitSAR * userQty,
-                    aed: unitAED * userQty,
-                    id: Date.now()
-                });
+                // --- SMART MERGE LOGIC ---
+                // Check if product already exists in cart
+                const existingItem = projectCart.find(cartItem => cartItem.name === item.product);
+
+                if (existingItem) {
+                    // Update existing item values
+                    existingItem.qty += userQty;
+                    existingItem.pkr += unitPKR * userQty;
+                    existingItem.sar += unitSAR * userQty;
+                    existingItem.aed += unitAED * userQty;
+                } else {
+                    // Add as new row
+                    projectCart.push({
+                        name: item.product,
+                        qty: userQty,
+                        pkr: unitPKR * userQty,
+                        sar: unitSAR * userQty,
+                        aed: unitAED * userQty,
+                        id: Date.now()
+                    });
+                }
                 renderCart();
             }
         }
