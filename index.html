@@ -54,10 +54,7 @@
             margin-bottom: 5px;
         }
 
-        .logo-img {
-            height: 60px;
-            width: auto;
-        }
+        .logo-img { height: 60px; width: auto; border-radius: 10px; }
 
         .logo-text { 
             font-size: 3.5rem; 
@@ -123,10 +120,7 @@
 
     <div class="container">
         <div class="brand-container">
-            <img src="wlogo.png" 
-                 alt="Bayut Studios Logo" 
-                 class="logo-img" 
-                 onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline'">
+            <img src="wlogo.png" alt="Bayut Studios Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline'">
             <span id="logo-fallback" style="display:none; font-size: 2.5rem; margin-right: 10px;">🏠</span>
             <h1 class="logo-text">Bayut Studios</h1>
         </div>
@@ -157,22 +151,37 @@
 
     <script>
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
+        // Use the Viz API but with a safer query to ensure column order
         const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
         let rawData = [];
 
+        // Helper to clean strings like "PKR 688,092" into numbers like 688092
+        function parseCurrency(val) {
+            if (!val) return 0;
+            // Remove everything except numbers and dots
+            const clean = String(val).replace(/[^\d.]/g, '');
+            return parseFloat(clean) || 0;
+        }
+
         fetch(DATA_URL)
             .then(res => res.text())
             .then(text => {
+                // Remove the Google JSON wrapper
                 const json = JSON.parse(text.substr(47).slice(0, -2));
-                rawData = json.table.rows.map(row => ({
-                    category: row.c[1]?.v,
-                    product: row.c[2]?.v,
-                    pkr: row.c[5]?.v || 0,
-                    usd: row.c[6]?.v || 0,
-                    sar: row.c[7]?.v || 0,
-                    aed: row.c[8]?.v || 0 
-                }));
+                
+                // DATA MAPPING (Corrected for your specific schema)
+                rawData = json.table.rows.map(row => {
+                    const cols = row.c;
+                    return {
+                        category: cols[0]?.v,         // Column A: Product Category
+                        product:  cols[1]?.v,         // Column B: Product
+                        pkr: parseCurrency(cols[4]?.v), // Column E: Total Price (PKR)
+                        sar: parseCurrency(cols[6]?.v), // Column G: Total Price (SAR)
+                        aed: parseCurrency(cols[7]?.v)  // Column H: Total Price (AED)
+                    };
+                }).filter(i => i.category && i.product);
+                
                 init();
             })
             .catch(err => {
@@ -201,15 +210,20 @@
             const item = rawData.find(i => i.product === pName);
             
             if(item) {
-                document.getElementById('resPKR').innerText = `PKR ${(item.pkr * units).toLocaleString()}`;
-                document.getElementById('resSAR').innerText = (item.sar * units).toLocaleString(undefined, {minimumFractionDigits: 2});
-                document.getElementById('resAED').innerText = (item.aed * units).toLocaleString(undefined, {minimumFractionDigits: 2});
+                const totalPKR = item.pkr * units;
+                const totalSAR = item.sar * units;
+                const totalAED = item.aed * units;
+
+                document.getElementById('resPKR').innerText = `PKR ${totalPKR.toLocaleString()}`;
+                document.getElementById('resSAR').innerText = totalSAR.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+                document.getElementById('resAED').innerText = totalAED.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
                 document.getElementById('resultCard').style.display = 'block';
             }
         }
 
+        // Star animation logic
         const field = document.getElementById('starField');
-        for(let i=0; i<120; i++) {
+        for(let i=0; i<150; i++) { // Increased star count for "Rich" feel
             const s = document.createElement('div');
             s.className = 'star';
             const size = Math.random() * 2 + 1 + 'px';
