@@ -186,7 +186,7 @@
                     <div class="item-details"><h4>${item.name}</h4><p>Qty: <b>${item.qty}</b></p></div>
                     <div class="item-pricing">
                         <span class="pkr-price">PKR ${item.tP.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-                        <div style="font-size:10px; opacity:0.6;">SAR ${item.tS.toLocaleString(undefined,{minimumFractionDigits:2})} | AED ${item.tA.toLocaleString(undefined,{minimumFractionDigits:2})}</div>
+                        <div style="font-size:20px; opacity:0.6;">SAR ${item.tS.toLocaleString(undefined,{minimumFractionDigits:2})} | AED ${item.tA.toLocaleString(undefined,{minimumFractionDigits:2})}</div>
                     </div>
                     <button class="btn-del" onclick="cart.splice(${idx},1);render()">×</button></div>`;
                 
