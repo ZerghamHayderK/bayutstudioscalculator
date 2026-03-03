@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayut Studios | Global Quotation Engine</title>
+    <title>Bayut Studios | Project Cart Engine</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,66 +19,53 @@
             margin: 0;
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 50px;
+            padding-bottom: 100px;
         }
 
-        .stars {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
-        }
+        /* 1. STAR ENGINE */
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
+        @keyframes glisten { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.3); } }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0;
-            animation: glisten var(--duration) infinite ease-in-out;
-        }
+        .container { width: 90%; max-width: 850px; margin: 40px auto; }
 
-        @keyframes glisten {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.3); }
-        }
-
-        .container { width: 95%; max-width: 900px; margin: 40px auto; text-align: center; }
-
+        /* 2. BRANDING */
+        .brand-container { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px; }
         .logo-text { font-size: 3.5rem; font-weight: 900; color: var(--primary-green); margin: 0; }
-        .rich-header { font-size: 1.5rem; letter-spacing: 12px; text-transform: uppercase; margin-bottom: 40px; font-weight: 200; opacity: 0.8; }
+        .rich-header { font-size: 1.4rem; letter-spacing: 12px; text-transform: uppercase; margin-bottom: 40px; font-weight: 200; text-align: center; opacity: 0.7; }
 
-        /* Configuration Panel */
+        /* 3. SELECTION CARD */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 35px;
-            text-align: left;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        label { color: var(--primary-green); font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; display: block; margin-bottom: 8px; }
+        label { color: var(--primary-green); font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; display: block; margin-bottom: 10px; }
         
         select, input {
-            width: 100%; padding: 14px; background: #000; border: 1px solid var(--glass-border);
-            color: white; border-radius: 8px; margin-bottom: 20px; font-family: inherit;
-            box-sizing: border-box; font-size: 1rem;
+            width: 100%; padding: 15px; background: #000; border: 1px solid var(--glass-border);
+            color: white; border-radius: 8px; margin-bottom: 25px; font-family: inherit;
+            box-sizing: border-box; font-size: 1rem; transition: 0.3s;
         }
+        select:focus, input:focus { border-color: var(--primary-green); outline: none; }
 
         .btn-add {
             width: 100%; padding: 18px; background: var(--primary-green); border: none;
             color: white; font-weight: 900; text-transform: uppercase; letter-spacing: 3px;
-            border-radius: 10px; cursor: pointer; transition: 0.3s;
+            border-radius: 12px; cursor: pointer; transition: 0.3s; font-size: 1.1rem;
         }
-
         .btn-add:hover { box-shadow: 0 10px 30px rgba(55, 179, 111, 0.4); transform: translateY(-2px); }
 
-        /* Quotation List Styling */
-        .list-header { text-align: left; letter-spacing: 5px; font-size: 0.9rem; margin: 40px 0 20px; color: #666; font-weight: 700; }
-
-        .item-card {
-            background: rgba(255, 255, 255, 0.03);
+        /* 4. DYNAMIC CART LIST */
+        .cart-header { text-align: left; font-size: 0.9rem; letter-spacing: 4px; color: #555; font-weight: 900; margin-bottom: 20px; text-transform: uppercase; }
+        
+        .cart-item {
+            background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
             border-radius: 15px;
             padding: 20px 25px;
@@ -87,23 +74,241 @@
             align-items: center;
             justify-content: space-between;
             animation: fadeIn 0.4s ease-out;
-            text-align: left;
         }
 
-        .item-info { flex-grow: 1; }
-        .item-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff; }
-        .item-meta { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #888; }
-        .item-meta b { color: var(--primary-green); font-weight: 900; }
+        .item-info { flex-grow: 1; text-align: left; }
+        .item-name { font-size: 1.2rem; font-weight: 700; color: #fff; margin: 0 0 5px 0; }
+        .item-qty { font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .item-qty b { color: var(--primary-green); }
 
-        .item-prices { text-align: right; margin-right: 30px; min-width: 180px; }
-        .pkr-main { font-size: 1.4rem; font-weight: 900; color: #fff; display: block; }
-        .other-subs { font-size: 0.8rem; color: #666; font-weight: 700; margin-top: 4px; }
+        .item-price-block { text-align: right; margin-right: 25px; }
+        .pkr-price { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.4rem; color: #fff; display: block; }
+        .sub-prices { font-size: 0.75rem; color: #666; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px; }
 
-        /* Bin Icon Style: Green Background, Black Icon */
-        .btn-delete {
+        /* 5. THE BIN BUTTON: Green Background, Black Icon */
+        .btn-del {
             background: var(--primary-green);
             color: #000;
             border: none;
             width: 45px;
             height: 45px;
-            border
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-del:hover { background: #fff; transform: scale(1.05); }
+
+        /* 6. FINAL VALUATION CARD */
+        .valuation-card {
+            margin-top: 60px; 
+            background: linear-gradient(145deg, rgba(55, 179, 111, 0.1) 0%, rgba(0,0,0,0.6) 100%);
+            border: 2px solid var(--primary-green);
+            border-radius: 25px; 
+            padding: 45px; 
+            text-align: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .val-total-label { color: var(--primary-green); font-weight: 700; letter-spacing: 6px; font-size: 0.85rem; margin-bottom: 15px; }
+        .grand-total { font-family: 'Inter', sans-serif; font-size: 4rem; font-weight: 900; margin: 0; line-height: 1; }
+        
+        .currency-grid {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+        .cur-box small { opacity: 0.5; font-size: 0.8rem; letter-spacing: 2px; font-weight: 700; }
+        .cur-box b { display: block; font-size: 1.8rem; font-family: 'Inter'; font-weight: 900; color: var(--primary-green); margin-top: 5px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="stars" id="starField"></div>
+
+    <div class="container">
+        <div class="brand-container">
+            <h1 class="logo-text">Bayut Studios</h1>
+        </div>
+        <div class="rich-header">Project Cart Engine</div>
+
+        <div class="glass-panel">
+            <label>PROJECT CATEGORY</label>
+            <select id="catSelect" onchange="updateProducts()"><option>Syncing Data...</option></select>
+
+            <label>SERVICE PRODUCT</label>
+            <select id="prodSelect"><option>Select Category First</option></select>
+
+            <label>QUANTITY / UNITS</label>
+            <input type="number" id="unitInput" value="1" min="1">
+
+            <button class="btn-add" onclick="addToProject()">Add to Project</button>
+        </div>
+
+        <div id="projectSection" style="display: none;">
+            <div class="cart-header">Current Project Scope</div>
+            <div id="cartList"></div>
+
+            <div class="valuation-card">
+                <div class="val-total-label">✦ GRAND TOTAL VALUATION ✦</div>
+                <h1 id="resPKR" class="grand-total">PKR 0</h1>
+                
+                <div class="currency-grid">
+                    <div class="cur-box">
+                        <small>SAR TOTAL</small>
+                        <b id="resSAR">0.00</b>
+                    </div>
+                    <div class="cur-box">
+                        <small>AED TOTAL</small>
+                        <b id="resAED">0.00</b>
+                    </div>
+                </div>
+                
+                <button onclick="resetProject()" style="background:transparent; border:none; color:#444; margin-top:40px; cursor:pointer; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Reset Entire Scope</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
+        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+        let masterInventory = [];
+        let projectScope = [];
+
+        function clean(val) {
+            if (!val) return 0;
+            return parseFloat(String(val).replace(/[PKR|SAR|dh|\$|,]/gi, '')) || 0;
+        }
+
+        // Fetch Data from Google Sheet
+        fetch(DATA_URL)
+            .then(res => res.text())
+            .then(text => {
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                masterInventory = json.table.rows.map(row => {
+                    const c = row.c;
+                    if (!c[0] || !c[1]) return null;
+                    return {
+                        category: c[0].v,
+                        product:  c[1].v,
+                        baseQty:  clean(c[2]?.v) || 1,
+                        pkr:      clean(c[4]?.v),
+                        sar:      clean(c[6]?.v),
+                        aed:      clean(c[7]?.v)
+                    };
+                }).filter(i => i !== null);
+                initInterface();
+            });
+
+        function initInterface() {
+            const cats = [...new Set(masterInventory.map(i => i.category))].filter(Boolean);
+            const sel = document.getElementById('catSelect');
+            sel.innerHTML = '<option value="">Select Category</option>';
+            cats.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
+        }
+
+        function updateProducts() {
+            const cat = document.getElementById('catSelect').value;
+            const sel = document.getElementById('prodSelect');
+            sel.innerHTML = '<option value="">Select Service</option>';
+            masterInventory.filter(i => i.category === cat)
+                           .forEach(i => sel.innerHTML += `<option value="${i.product}">${i.product}</option>`);
+        }
+
+        function addToProject() {
+            const pName = document.getElementById('prodSelect').value;
+            const userQty = parseInt(document.getElementById('unitInput').value) || 1;
+            const item = masterInventory.find(i => i.product === pName);
+            
+            if(item) {
+                // Determine unit cost first
+                const uPKR = item.pkr / item.baseQty;
+                const uSAR = item.sar / item.baseQty;
+                const uAED = item.aed / item.baseQty;
+
+                projectScope.push({
+                    id: Date.now(),
+                    name: item.product,
+                    qty: userQty,
+                    pkr: uPKR * userQty,
+                    sar: uSAR * userQty,
+                    aed: uAED * userQty
+                });
+                renderScope();
+            }
+        }
+
+        function removeItem(id) {
+            projectScope = projectScope.filter(item => item.id !== id);
+            renderScope();
+        }
+
+        function resetProject() {
+            if(confirm("Are you sure you want to clear the project scope?")) {
+                projectScope = [];
+                renderScope();
+            }
+        }
+
+        function renderScope() {
+            const section = document.getElementById('projectSection');
+            const list = document.getElementById('cartList');
+            
+            if(projectScope.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            list.innerHTML = '';
+
+            let totalPKR = 0, totalSAR = 0, totalAED = 0;
+
+            projectScope.forEach(item => {
+                totalPKR += item.pkr; totalSAR += item.sar; totalAED += item.aed;
+                
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <div class="item-info">
+                            <h4 class="item-name">${item.name}</h4>
+                            <div class="item-qty">Quantity: <b>${item.qty}</b></div>
+                        </div>
+                        <div class="item-price-block">
+                            <span class="pkr-price">PKR ${item.pkr.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                            <div class="sub-prices">SAR ${item.sar.toLocaleString(undefined, {minimumFractionDigits:2})} | AED ${item.aed.toLocaleString(undefined, {minimumFractionDigits:2})}</div>
+                        </div>
+                        <button class="btn-del" onclick="removeItem(${item.id})">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        </button>
+                    </div>
+                `;
+            });
+
+            document.getElementById('resPKR').innerText = `PKR ${totalPKR.toLocaleString(undefined, {maximumFractionDigits:0})}`;
+            document.getElementById('resSAR').innerText = totalSAR.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('resAED').innerText = totalAED.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        }
+
+        // Starfield background logic
+        const field = document.getElementById('starField');
+        for(let i=0; i<150; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = Math.random() * 2 + 1 + 'px';
+            s.style.width = size; s.style.height = size;
+            s.style.top = Math.random() * 100 + '%';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+            field.appendChild(s);
+        }
+    </script>
+</body>
+</html>
