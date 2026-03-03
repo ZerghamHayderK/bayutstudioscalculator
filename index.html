@@ -128,7 +128,7 @@
 
         <div class="glass-panel">
             <label>CATEGORY</label>
-            <select id="catSelect" onchange="updateProducts()"><option>Loading Data...</option></select>
+            <select id="catSelect" onchange="updateProducts()"><option>Loading Engine...</option></select>
 
             <label>PRODUCT SERVICE</label>
             <select id="prodSelect"><option>Select Category First</option></select>
@@ -136,7 +136,7 @@
             <label>UNITS REQUIRED</label>
             <input type="number" id="unitInput" value="1" min="1">
 
-            <button class="btn-add" onclick="calculate()">Add to Quotation</button>
+            <button class="btn-add" onclick="calculate()">Calculate Quotation</button>
         </div>
 
         <div id="resultCard" class="valuation-card">
@@ -151,42 +151,44 @@
 
     <script>
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        // Use the Viz API but with a safer query to ensure column order
         const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
         let rawData = [];
 
-        // Helper to clean strings like "PKR 688,092" into numbers like 688092
-        function parseCurrency(val) {
-            if (!val) return 0;
-            // Remove everything except numbers and dots
-            const clean = String(val).replace(/[^\d.]/g, '');
+        // Helper to strip currency codes/commas and return a clean number
+        function cleanNum(val) {
+            if (val === null || val === undefined) return 0;
+            // Remove PKR, SAR, dh, $, and commas
+            const clean = String(val).replace(/[PKR|SAR|dh|\$|,]/gi, '');
             return parseFloat(clean) || 0;
         }
 
         fetch(DATA_URL)
             .then(res => res.text())
             .then(text => {
-                // Remove the Google JSON wrapper
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 
-                // DATA MAPPING (Corrected for your specific schema)
+                // STRICT MAPPING BASED ON YOUR SCHEMA
                 rawData = json.table.rows.map(row => {
-                    const cols = row.c;
+                    const c = row.c;
+                    // Logic: Some rows might be empty, skip them
+                    if (!c[0] || !c[1]) return null;
+
                     return {
-                        category: cols[0]?.v,         // Column A: Product Category
-                        product:  cols[1]?.v,         // Column B: Product
-                        pkr: parseCurrency(cols[4]?.v), // Column E: Total Price (PKR)
-                        sar: parseCurrency(cols[6]?.v), // Column G: Total Price (SAR)
-                        aed: parseCurrency(cols[7]?.v)  // Column H: Total Price (AED)
+                        category: c[0].v,       // A: Product Category
+                        product:  c[1].v,       // B: Product
+                        baseQty:  cleanNum(c[2]?.v) || 1, // C: Units in Sheet
+                        pkr:      cleanNum(c[4]?.v), // E: Price PKR
+                        sar:      cleanNum(c[6]?.v), // G: Price SAR
+                        aed:      cleanNum(c[7]?.v)  // H: Price UAE (AED)
                     };
-                }).filter(i => i.category && i.product);
+                }).filter(i => i !== null);
                 
                 init();
             })
             .catch(err => {
-                console.error("Error loading sheet:", err);
-                document.getElementById('catSelect').innerHTML = "<option>Error Loading Sheet</option>";
+                console.error("Sync Error:", err);
+                document.getElementById('catSelect').innerHTML = "<option>Offline: Check Sheet</option>";
             });
 
         function init() {
@@ -206,24 +208,31 @@
 
         function calculate() {
             const pName = document.getElementById('prodSelect').value;
-            const units = parseInt(document.getElementById('unitInput').value) || 1;
+            const userQty = parseInt(document.getElementById('unitInput').value) || 1;
             const item = rawData.find(i => i.product === pName);
             
             if(item) {
-                const totalPKR = item.pkr * units;
-                const totalSAR = item.sar * units;
-                const totalAED = item.aed * units;
+                // We divide the price in the sheet by the "Units Required" column 
+                // to get the true single-unit price before multiplying by user input.
+                const unitPricePKR = item.pkr / item.baseQty;
+                const unitPriceSAR = item.sar / item.baseQty;
+                const unitPriceAED = item.aed / item.baseQty;
 
-                document.getElementById('resPKR').innerText = `PKR ${totalPKR.toLocaleString()}`;
-                document.getElementById('resSAR').innerText = totalSAR.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
-                document.getElementById('resAED').innerText = totalAED.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+                const finalPKR = unitPricePKR * userQty;
+                const finalSAR = unitPriceSAR * userQty;
+                const finalAED = unitPriceAED * userQty;
+
+                document.getElementById('resPKR').innerText = `PKR ${finalPKR.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+                document.getElementById('resSAR').innerText = finalSAR.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('resAED').innerText = finalAED.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('resultCard').style.display = 'block';
             }
         }
 
-        // Star animation logic
+        // Starfield logic
         const field = document.getElementById('starField');
-        for(let i=0; i<150; i++) { // Increased star count for "Rich" feel
+        for(let i=0; i<150; i++) {
             const s = document.createElement('div');
             s.className = 'star';
             const size = Math.random() * 2 + 1 + 'px';
