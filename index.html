@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayut Studios | Price Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <title>Bayut Studios | Global Quotation Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-green: #37b36f;
@@ -18,10 +18,8 @@
             font-family: 'Montserrat', sans-serif;
             margin: 0;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow-x: hidden;
+            padding-bottom: 50px;
         }
 
         .stars {
@@ -41,207 +39,71 @@
 
         @keyframes glisten {
             0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,255,255,0.4); }
+            50% { opacity: 0.8; transform: scale(1.3); }
         }
 
-        .container { width: 100%; max-width: 750px; padding: 20px; text-align: center; }
+        .container { width: 95%; max-width: 900px; margin: 40px auto; text-align: center; }
 
-        .brand-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 5px;
-        }
+        .logo-text { font-size: 3.5rem; font-weight: 900; color: var(--primary-green); margin: 0; }
+        .rich-header { font-size: 1.5rem; letter-spacing: 12px; text-transform: uppercase; margin-bottom: 40px; font-weight: 200; opacity: 0.8; }
 
-        .logo-img { height: 60px; width: auto; border-radius: 10px; }
-
-        .logo-text { 
-            font-size: 3.5rem; 
-            font-weight: 900; 
-            color: var(--primary-green); 
-            margin: 0;
-        }
-
-        .rich-header { 
-            font-size: 1.8rem; 
-            letter-spacing: 10px; 
-            text-transform: uppercase; 
-            margin-bottom: 30px; 
-            font-weight: 200;
-        }
-
+        /* Configuration Panel */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 35px;
             text-align: left;
+            margin-bottom: 40px;
         }
 
         label { color: var(--primary-green); font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; display: block; margin-bottom: 8px; }
         
         select, input {
-            width: 100%; padding: 12px; background: #000; border: 1px solid var(--glass-border);
-            color: white; border-radius: 6px; margin-bottom: 20px; font-family: inherit;
-            box-sizing: border-box;
+            width: 100%; padding: 14px; background: #000; border: 1px solid var(--glass-border);
+            color: white; border-radius: 8px; margin-bottom: 20px; font-family: inherit;
+            box-sizing: border-box; font-size: 1rem;
         }
 
         .btn-add {
-            width: 100%; padding: 15px; background: var(--primary-green); border: none;
-            color: white; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
-            border-radius: 8px; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 18px; background: var(--primary-green); border: none;
+            color: white; font-weight: 900; text-transform: uppercase; letter-spacing: 3px;
+            border-radius: 10px; cursor: pointer; transition: 0.3s;
         }
 
-        .btn-add:hover {
-            box-shadow: 0 0 15px var(--primary-green);
-            transform: translateY(-2px);
+        .btn-add:hover { box-shadow: 0 10px 30px rgba(55, 179, 111, 0.4); transform: translateY(-2px); }
+
+        /* Quotation List Styling */
+        .list-header { text-align: left; letter-spacing: 5px; font-size: 0.9rem; margin: 40px 0 20px; color: #666; font-weight: 700; }
+
+        .item-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeIn 0.4s ease-out;
+            text-align: left;
         }
 
-        .valuation-card {
-            margin-top: 30px; 
-            background: rgba(55, 179, 111, 0.1); 
-            border: 1px solid var(--primary-green);
-            border-radius: 15px; 
-            padding: 25px; 
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
+        .item-info { flex-grow: 1; }
+        .item-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff; }
+        .item-meta { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #888; }
+        .item-meta b { color: var(--primary-green); font-weight: 900; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-</head>
-<body>
-    <div class="stars" id="starField"></div>
+        .item-prices { text-align: right; margin-right: 30px; min-width: 180px; }
+        .pkr-main { font-size: 1.4rem; font-weight: 900; color: #fff; display: block; }
+        .other-subs { font-size: 0.8rem; color: #666; font-weight: 700; margin-top: 4px; }
 
-    <div class="container">
-        <div class="brand-container">
-            <img src="wlogo.png" alt="Bayut Studios Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline'">
-            <span id="logo-fallback" style="display:none; font-size: 2.5rem; margin-right: 10px;">🏠</span>
-            <h1 class="logo-text">Bayut Studios</h1>
-        </div>
-        <div class="rich-header">Price Calculator</div>
-
-        <div class="glass-panel">
-            <label>CATEGORY</label>
-            <select id="catSelect" onchange="updateProducts()"><option>Loading Engine...</option></select>
-
-            <label>PRODUCT SERVICE</label>
-            <select id="prodSelect"><option>Select Category First</option></select>
-
-            <label>UNITS REQUIRED</label>
-            <input type="number" id="unitInput" value="1" min="1">
-
-            <button class="btn-add" onclick="calculate()">Calculate Quotation</button>
-        </div>
-
-        <div id="resultCard" class="valuation-card">
-            <p style="color: var(--primary-green); font-weight: 700; margin: 0; letter-spacing: 2px;">TOTAL VALUATION</p>
-            <h1 id="resPKR" style="font-size: 3rem; margin: 10px 0;">PKR 0</h1>
-            <div style="display: flex; justify-content: center; gap: 30px;">
-                <div><small style="opacity: 0.6;">SAR</small><br><b id="resSAR" style="font-size: 1.2rem;">0</b></div>
-                <div><small style="opacity: 0.6;">AED</small><br><b id="resAED" style="font-size: 1.2rem;">0</b></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-
-        let rawData = [];
-
-        // Helper to strip currency codes/commas and return a clean number
-        function cleanNum(val) {
-            if (val === null || val === undefined) return 0;
-            // Remove PKR, SAR, dh, $, and commas
-            const clean = String(val).replace(/[PKR|SAR|dh|\$|,]/gi, '');
-            return parseFloat(clean) || 0;
-        }
-
-        fetch(DATA_URL)
-            .then(res => res.text())
-            .then(text => {
-                const json = JSON.parse(text.substr(47).slice(0, -2));
-                
-                // STRICT MAPPING BASED ON YOUR SCHEMA
-                rawData = json.table.rows.map(row => {
-                    const c = row.c;
-                    // Logic: Some rows might be empty, skip them
-                    if (!c[0] || !c[1]) return null;
-
-                    return {
-                        category: c[0].v,       // A: Product Category
-                        product:  c[1].v,       // B: Product
-                        baseQty:  cleanNum(c[2]?.v) || 1, // C: Units in Sheet
-                        pkr:      cleanNum(c[4]?.v), // E: Price PKR
-                        sar:      cleanNum(c[6]?.v), // G: Price SAR
-                        aed:      cleanNum(c[7]?.v)  // H: Price UAE (AED)
-                    };
-                }).filter(i => i !== null);
-                
-                init();
-            })
-            .catch(err => {
-                console.error("Sync Error:", err);
-                document.getElementById('catSelect').innerHTML = "<option>Offline: Check Sheet</option>";
-            });
-
-        function init() {
-            const cats = [...new Set(rawData.map(i => i.category))].filter(Boolean);
-            const sel = document.getElementById('catSelect');
-            sel.innerHTML = '<option value="">Select Category</option>';
-            cats.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
-        }
-
-        function updateProducts() {
-            const cat = document.getElementById('catSelect').value;
-            const sel = document.getElementById('prodSelect');
-            sel.innerHTML = '<option value="">Select Product</option>';
-            rawData.filter(i => i.category === cat)
-                   .forEach(i => sel.innerHTML += `<option value="${i.product}">${i.product}</option>`);
-        }
-
-        function calculate() {
-            const pName = document.getElementById('prodSelect').value;
-            const userQty = parseInt(document.getElementById('unitInput').value) || 1;
-            const item = rawData.find(i => i.product === pName);
-            
-            if(item) {
-                // We divide the price in the sheet by the "Units Required" column 
-                // to get the true single-unit price before multiplying by user input.
-                const unitPricePKR = item.pkr / item.baseQty;
-                const unitPriceSAR = item.sar / item.baseQty;
-                const unitPriceAED = item.aed / item.baseQty;
-
-                const finalPKR = unitPricePKR * userQty;
-                const finalSAR = unitPriceSAR * userQty;
-                const finalAED = unitPriceAED * userQty;
-
-                document.getElementById('resPKR').innerText = `PKR ${finalPKR.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
-                document.getElementById('resSAR').innerText = finalSAR.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('resAED').innerText = finalAED.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
-                document.getElementById('resultCard').style.display = 'block';
-            }
-        }
-
-        // Starfield logic
-        const field = document.getElementById('starField');
-        for(let i=0; i<150; i++) {
-            const s = document.createElement('div');
-            s.className = 'star';
-            const size = Math.random() * 2 + 1 + 'px';
-            s.style.width = size; s.style.height = size;
-            s.style.top = Math.random() * 100 + '%';
-            s.style.left = Math.random() * 100 + '%';
-            s.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
-            field.appendChild(s);
-        }
-    </script>
-</body>
-</html>
+        /* Bin Icon Style: Green Background, Black Icon */
+        .btn-delete {
+            background: var(--primary-green);
+            color: #000;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border
