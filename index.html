@@ -17,33 +17,29 @@
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
         @keyframes glisten { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.2); } }
         
-        /* THEME TOGGLE */
-        .theme-toggle { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 14px; cursor: pointer; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; width: 100%; margin-bottom: 10px; transition: transform 0.2s; }
-        body.dark-mode .theme-toggle { color: black; }
-        .theme-toggle:hover { transform: scale(1.02); }
-
-        /* SIDEBAR */
+        .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
         .sidebar { width: 260px; background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-radius: 30px; height: calc(100vh - 50px); box-sizing: border-box; overflow-y: auto; position: sticky; top: 25px; }
         .section-title { color: var(--primary); font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-left: 3px solid var(--primary); padding-left: 10px; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 0.6rem; opacity: 0.6; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         input, select { background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-color); padding: 12px; border-radius: 12px; font-family: inherit; font-size: 0.85rem; outline: none; width: 100%; box-sizing: border-box; }
         
-        /* CONTENT */
         .main-content { flex: 1; display: flex; flex-direction: column; gap: 20px; }
         .header { display: flex; justify-content: space-between; align-items: center; }
         .logo-block { display: flex; align-items: center; gap: 12px; }
         .logo-img { height: 40px; width: auto; }
         .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin: 0; letter-spacing: -1px; }
-        .btn-download { background: var(--primary); color: white; border: none; padding: 14px 28px; border-radius: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; }
-        body.dark-mode .btn-download { color: black; }
         
+        /* HEADER BUTTONS */
+        .btn-top { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; transition: 0.3s; }
+        body.dark-mode .btn-top { color: black; }
+        .btn-top:hover { transform: scale(1.05); }
+
         .card { background: var(--panel-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px; }
         .builder-row { display: grid; grid-template-columns: 1.5fr 1.5fr 0.5fr 1fr; gap: 15px; align-items: flex-end; }
         .btn-add { background: var(--text-color); color: var(--bg-color); border: none; padding: 14px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; }
         body.dark-mode .btn-add { background: var(--primary); color: black; }
         
-        /* ITEM LIST & QTY EDITOR */
         .quote-item { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .qty-edit { width: 65px !important; padding: 5px !important; text-align: center; border-radius: 8px !important; margin-left: 10px; border: 1px solid var(--primary) !important; background: var(--input-bg); color: var(--text-color); }
         .btn-remove { background: #ff4b4b; color: white; border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-weight: bold; }
@@ -57,6 +53,18 @@
         .cur-pill.active { background: var(--primary); color: white !important; opacity: 1; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
         body.dark-mode .cur-pill.active { color: #000 !important; }
 
+        /* --- PRODUCT BROWSER OVERLAY --- */
+        #productBrowser { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; padding: 40px; box-sizing: border-box; overflow-y: auto; backdrop-filter: blur(15px); }
+        .browser-content { max-width: 1100px; margin: 0 auto; }
+        .browser-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--primary); padding-bottom: 20px; }
+        .browser-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .product-card { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; transition: 0.3s; }
+        .product-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .prod-cat-label { font-size: 0.6rem; color: var(--primary); font-weight: 900; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .prod-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; display: block; }
+        .prod-meta { display: flex; gap: 15px; font-size: 0.8rem; margin-bottom: 15px; opacity: 0.8; }
+        .prod-details { font-size: 0.8rem; opacity: 0.6; line-height: 1.5; }
+
         /* --- MOBILE VIEW --- */
         @media screen and (max-width: 850px) {
             body { flex-direction: column; padding: 15px; gap: 20px; overflow-y: auto; }
@@ -64,20 +72,27 @@
             .main-content { order: 1; display: flex; flex-direction: column; gap: 20px; }
             .header { order: 1; flex-direction: column; gap: 15px; align-items: center; text-align: center; }
             .logo-text { font-size: 1.4rem; }
-            .builder-card { order: 3; }
-            .builder-row { grid-template-columns: 1fr; gap: 15px; }
-            .summary-card { order: 4; }
-            .btn-download-container { order: 5; }
-            .btn-download { width: 100%; padding: 20px; }
-            .quote-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .btn-header-group { display: flex; gap: 10px; width: 100%; }
+            .btn-top { flex: 1; font-size: 0.6rem; padding: 15px 10px; }
+            .builder-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body class="dark-mode">
     <div class="stars" id="starField"></div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Switch Theme"></button>
+    
+    <div id="productBrowser">
+        <div class="browser-content">
+            <div class="browser-header">
+                <h1 class="logo-text">Service Inventory</h1>
+                <button class="btn-top" onclick="toggleBrowser()">Close Browser</button>
+            </div>
+            <div id="browserGrid" class="browser-grid"></div>
+        </div>
+    </div>
+
     <aside class="sidebar">
-        <button id="themeBtn" class="theme-toggle" onclick="toggleTheme()">Light Mode</button>
-        
         <div class="input-group">
             <div class="section-title">Client Info</div>
             <label>Client Name</label>
@@ -91,13 +106,11 @@
             <label>Client Address</label>
             <input type="text" id="clientAddressInput" placeholder="Enter address">
         </div>
-
         <div class="input-group">
             <div class="section-title">Global Adjustments</div>
             <label>Overall Discount (%)</label>
             <input type="number" id="globalDiscountInput" value="0" step="0.5" oninput="render()">
         </div>
-
         <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--glass-border);">
             <div class="section-title">Status</div>
             <p id="status" style="font-size: 0.6rem; opacity: 0.5;">Connecting...</p>
@@ -110,8 +123,9 @@
                 <img src="wlogo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
                 <h1 class="logo-text">Bayut Studios | Price Calculator</h1>
             </div>
-            <div class="btn-download-container">
-                <button class="btn-download" onclick="generateInvoice()">Download PDF</button>
+            <div class="btn-header-group" style="display: flex; gap: 10px;">
+                <button class="btn-top" onclick="toggleBrowser()" style="background: transparent; border: 1px solid var(--primary); color: var(--primary);">Browse Products</button>
+                <button class="btn-top" onclick="generateInvoice()">Download PDF</button>
             </div>
         </div>
         
@@ -161,49 +175,64 @@
 
         const savedTheme = localStorage.getItem('theme') || 'dark-mode';
         document.body.className = savedTheme;
-        document.getElementById('themeBtn').innerText = savedTheme === 'dark-mode' ? 'Light Mode' : 'Dark Mode';
 
         function toggleTheme() {
             const body = document.body;
-            const btn = document.getElementById('themeBtn');
             const newTheme = body.classList.contains('dark-mode') ? 'light-mode' : 'dark-mode';
             body.className = newTheme;
-            btn.innerText = newTheme === 'dark-mode' ? 'Light Mode' : 'Dark Mode';
             localStorage.setItem('theme', newTheme);
         }
 
-        function generateInvoice() {
-            if (cart.length === 0) return alert("Please add items first!");
-            const clientName = document.getElementById('clientNameInput').value || "<Client Representative>";
-            const clientEmail = document.getElementById('clientEmailInput').value || "<Email>";
-            const clientAddress = document.getElementById('clientAddressInput').value || "<Address>";
-            const discountPercent = parseFloat(document.getElementById('globalDiscountInput').value) || 0;
-            const printWindow = window.open('', '_blank');
-            const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
-            
-            let sums = { pkr: 0, aed: 0 };
-            let rows = cart.map(item => {
-                const p = (item.pkr / item.bQty) * item.qty;
-                const a = (item.aed / item.bQty) * item.qty;
-                sums.pkr += p; sums.aed += a;
-                return `<tr><td>${item.name}</td><td style="text-align:center">${item.qty}</td><td>PKR ${Math.round(p).toLocaleString()}</td><td style="font-weight:bold">dh ${a.toFixed(2)}</td></tr>`;
-            }).join('');
-
-            const discountedAED = sums.aed * (1 - (discountPercent / 100));
-
-            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.summary-box { margin-top: 20px; text-align: right; font-size: 12px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="summary-box">SUBTOTAL: dh ${sums.aed.toFixed(2)}<br>DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${discountedAED.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
-            printWindow.document.close();
-            setTimeout(() => printWindow.print(), 500);
+        function toggleBrowser() {
+            const b = document.getElementById('productBrowser');
+            b.style.display = (b.style.display === 'block') ? 'none' : 'block';
+            if(b.style.display === 'block') populateBrowser();
         }
 
         function parseCell(cell) { if (!cell) return 0; let val = cell.f ? cell.f : String(cell.v); return parseFloat(val.replace(/[^0-9.]/g, '')) || 0; }
+        
         fetch(DATA_URL).then(r => r.text()).then(t => {
             const data = JSON.parse(t.substr(47).slice(0, -2));
-            db = data.table.rows.map(r => { const c = r.c; return c[0] && c[1] ? { cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]) } : null; }).filter(x => x);
+            db = data.table.rows.map(r => { 
+                const c = r.c; 
+                return c[0] && c[1] ? { 
+                    cat: c[0].v, 
+                    name: c[1].v, 
+                    bQty: parseCell(c[2]) || 1, 
+                    pkr: parseCell(c[4]), 
+                    usd: parseCell(c[5]), 
+                    sar: parseCell(c[6]), 
+                    aed: parseCell(c[7]),
+                    time: c[13] ? c[13].v : "N/A", // Column N
+                    details: c[14] ? c[14].v : "No additional details available." // Column O
+                } : null; 
+            }).filter(x => x);
             const cats = [...new Set(db.map(i => i.cat))];
             document.getElementById('catSelect').innerHTML = '<option value="">Select Category</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
             document.getElementById('status').innerText = "Live: Synchronized";
         });
+
+        function populateBrowser() {
+            const grid = document.getElementById('browserGrid');
+            grid.innerHTML = db.map(i => `
+                <div class="product-card">
+                    <span class="prod-cat-label">${i.cat}</span>
+                    <strong class="prod-name">${i.name}</strong>
+                    <div class="prod-meta">
+                        <span><strong>AED:</strong> ${i.aed.toFixed(2)}</span>
+                        <span><strong>Time:</strong> ${i.time}</span>
+                    </div>
+                    <p class="prod-details">${i.details}</p>
+                    <button class="btn-top" style="width:100%; margin-top:15px; padding:10px;" onclick="addFromBrowser('${i.name}')">Select Product</button>
+                </div>
+            `).join('');
+        }
+
+        function addFromBrowser(name) {
+            const item = db.find(i => i.name === name);
+            if(item) { cart.push({ ...item, qty: 1 }); render(); toggleBrowser(); }
+        }
+
         function updateProducts() { const cat = document.getElementById('catSelect').value; document.getElementById('prodSelect').innerHTML = db.filter(i => i.cat === cat).map(i => `<option value="${i.name}">${i.name}</option>`).join(''); }
         function setCurrency(code) { activeCur = code; document.querySelectorAll('.cur-pill').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + code).classList.add('active'); render(); }
         function addToQuote() { const name = document.getElementById('prodSelect').value; const qty = parseInt(document.getElementById('unitInput').value) || 1; const item = db.find(i => i.name === name); if (item) { cart.push({ ...item, qty }); render(); } }
@@ -214,22 +243,37 @@
             const discInput = parseFloat(document.getElementById('globalDiscountInput').value) || 0;
             list.innerHTML = ''; let sums = { pkr: 0, sar: 0, aed: 0, usd: 0 };
             if (cart.length > 0) valBox.style.display = 'block'; else valBox.style.display = 'none';
-            
             cart.forEach((item, idx) => {
                 const p = (item.pkr / item.bQty) * item.qty; const s = (item.sar / item.bQty) * item.qty; const a = (item.aed / item.bQty) * item.qty; const u = (item.usd / item.bQty) * item.qty;
                 sums.pkr += p; sums.sar += s; sums.aed += a; sums.usd += u;
                 const dVal = activeCur === 'PKR' ? Math.round(p).toLocaleString() : (sums[activeCur.toLowerCase()] / sums.pkr * p).toFixed(2);
                 list.innerHTML += `<div class="quote-item"><div><b>${item.name}</b><br><small>Qty: <input type="number" class="qty-edit" value="${item.qty}" min="1" onchange="updateQty(${idx}, this.value)"></small></div><div style="display:flex; align-items:center; gap:15px;"><span style="font-weight:900;">${activeCur} ${dVal}</span><button class="btn-remove" onclick="cart.splice(${idx},1);render()">×</button></div></div>`;
             });
-
-            // APPLY DISCOUNT LOGIC
             const discMulti = 1 - (discInput / 100);
-            const totalVal = sums[activeCur.toLowerCase()] * discMulti;
-            const displayTotal = activeCur === 'PKR' ? Math.round(totalVal).toLocaleString() : totalVal.toFixed(2);
-            
-            document.getElementById('mainTotal').innerText = `${activeCur} ${displayTotal}`;
+            document.getElementById('mainTotal').innerText = `${activeCur} ${activeCur === 'PKR' ? Math.round(sums.pkr * discMulti).toLocaleString() : (sums[activeCur.toLowerCase()] * discMulti).toFixed(2)}`;
             document.getElementById('subTotals').innerText = `SAR ${(sums.sar * discMulti).toFixed(2)} | AED ${(sums.aed * discMulti).toFixed(2)} | USD ${(sums.usd * discMulti).toFixed(2)}`;
             document.getElementById('discountSummary').innerText = discInput > 0 ? `Reduced by ${discInput}% discount` : "";
+        }
+
+        function generateInvoice() {
+            if (cart.length === 0) return alert("Please add items first!");
+            const clientName = document.getElementById('clientNameInput').value || "<Client Representative>";
+            const clientEmail = document.getElementById('clientEmailInput').value || "<Email>";
+            const clientAddress = document.getElementById('clientAddressInput').value || "<Address>";
+            const discountPercent = parseFloat(document.getElementById('globalDiscountInput').value) || 0;
+            const printWindow = window.open('', '_blank');
+            const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+            let sums = { pkr: 0, aed: 0 };
+            let rows = cart.map(item => {
+                const p = (item.pkr / item.bQty) * item.qty;
+                const a = (item.aed / item.bQty) * item.qty;
+                sums.pkr += p; sums.aed += a;
+                return `<tr><td>${item.name}</td><td style="text-align:center">${item.qty}</td><td>PKR ${Math.round(p).toLocaleString()}</td><td style="font-weight:bold">dh ${a.toFixed(2)}</td></tr>`;
+            }).join('');
+            const discountedAED = sums.aed * (1 - (discountPercent / 100));
+            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.summary-box { margin-top: 20px; text-align: right; font-size: 12px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="summary-box">SUBTOTAL: dh ${sums.aed.toFixed(2)}<br>DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${discountedAED.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
+            printWindow.document.close();
+            setTimeout(() => printWindow.print(), 500);
         }
 
         const f = document.getElementById('starField'); for (let i = 0; i < 180; i++) { const s = document.createElement('div'); s.className = 'star'; const size = (Math.random() * 1.2 + 0.3) + 'px'; s.style.width = s.style.height = size; s.style.top = Math.random() * 100 + '%'; s.style.left = Math.random() * 100 + '%'; s.style.setProperty('--duration', (Math.random() * 4 + 2) + 's'); f.appendChild(s); }
