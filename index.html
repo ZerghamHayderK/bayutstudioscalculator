@@ -15,7 +15,6 @@
         body.light-mode .stars { display: none; }
         body.dark-mode .stars { display: block; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
-        @keyframes glisten { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.2); } }
         
         .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
         .sidebar { width: 260px; background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-radius: 30px; height: calc(100vh - 50px); box-sizing: border-box; overflow-y: auto; position: sticky; top: 25px; }
@@ -27,7 +26,6 @@
         .main-content { flex: 1; display: flex; flex-direction: column; gap: 20px; }
         .header { display: flex; justify-content: space-between; align-items: center; }
         .logo-block { display: flex; align-items: center; gap: 12px; }
-        .logo-img { height: 40px; width: auto; }
         .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin: 0; letter-spacing: -1px; }
         
         .btn-top { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; transition: 0.3s; }
@@ -39,27 +37,19 @@
         body.dark-mode .btn-add { background: var(--primary); color: black; }
         
         .quote-item { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        body.light-mode .quote-item { background: rgba(0,0,0,0.02); }
         .qty-edit { width: 65px !important; padding: 5px !important; text-align: center; border-radius: 8px !important; margin-left: 10px; border: 1px solid var(--primary) !important; background: var(--input-bg); color: var(--text-color); }
         .btn-remove { background: #ff4b4b; color: white; border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-weight: bold; }
         
         .valuation-card { background: linear-gradient(135deg, rgba(55, 179, 111, 0.1) 0%, rgba(0,0,0,0.05) 100%); border: 2px solid var(--primary); padding: 30px; border-radius: 25px; text-align: right; margin-top: 10px; }
         .total-val { font-size: 2.5rem; font-weight: 900; color: var(--primary); margin: 0; font-family: 'Inter'; }
-
         .currency-switcher { display: flex; background: rgba(0, 0, 0, 0.2); padding: 4px; border-radius: 12px; gap: 4px; border: 1px solid var(--glass-border); }
-        body.light-mode .currency-switcher { background: rgba(0, 0, 0, 0.05); }
         .cur-pill { border: none; background: transparent; color: var(--text-color); padding: 6px 16px; border-radius: 8px; cursor: pointer; font-size: 0.7rem; font-weight: 800; transition: all 0.3s ease; opacity: 0.6; }
-        .cur-pill.active { background: var(--primary); color: white !important; opacity: 1; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
-        body.dark-mode .cur-pill.active { color: #000 !important; }
+        .cur-pill.active { background: var(--primary); color: white !important; opacity: 1; }
 
         @media screen and (max-width: 850px) {
-            body { flex-direction: column; padding: 15px; gap: 20px; overflow-y: auto; }
-            .sidebar { width: 100%; height: auto; position: relative; top: 0; border-radius: 20px; padding: 20px; order: 2; }
-            .main-content { order: 1; display: flex; flex-direction: column; gap: 20px; }
-            .header { order: 1; flex-direction: column; gap: 15px; align-items: center; text-align: center; }
-            .logo-text { font-size: 1.4rem; }
-            .btn-header-group { display: flex; gap: 10px; width: 100%; }
-            .btn-top { flex: 1; font-size: 0.6rem; padding: 15px 10px; }
+            body { flex-direction: column; padding: 15px; gap: 20px; }
+            .sidebar { width: 100%; height: auto; position: relative; top: 0; border-radius: 20px; order: 2; }
+            .main-content { order: 1; }
             .builder-row { grid-template-columns: 1fr; }
         }
     </style>
@@ -97,7 +87,7 @@
     <main class="main-content">
         <div class="header">
             <div class="logo-block">
-                <img src="wlogo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="wlogo.png" alt="Logo" style="height:40px" onerror="this.style.display='none'">
                 <h1 class="logo-text">Bayut Studios | Price Calculator</h1>
             </div>
             <div class="btn-header-group" style="display: flex; gap: 10px;">
@@ -161,13 +151,9 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        // --- GLOBAL FUNCTION TO RECEIVE DATA FROM REGISTRY ---
         window.receiveProductSelection = function(productName) {
             const item = db.find(i => i.name === productName);
-            if (item) {
-                cart.push({ ...item, qty: 1 });
-                render();
-            }
+            if (item) { cart.push({ ...item, qty: 1 }); render(); }
         };
 
         function openProductList() {
@@ -187,66 +173,47 @@
                             --bg: ${isDark ? '#050505' : '#f8fafc'};
                             --text: ${isDark ? '#ffffff' : '#0f172a'};
                             --row-bg: ${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'};
-                            --border: ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'};
                         }
-                        body { font-family: 'Inter', sans-serif; padding: 60px 50px; background: var(--bg); color: var(--text); -webkit-print-color-adjust: exact; transition: 0.3s; }
-                        header { border-bottom: 1px solid var(--border); padding-bottom: 30px; margin-bottom: 40px; }
-                        h1 { font-size: 24px; font-weight: 900; color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: -0.5px; }
-                        .controls { display: flex; gap: 15px; margin-bottom: 30px; background: var(--row-bg); padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
-                        .controls input, .controls select { flex: 1; padding: 12px; background: ${isDark ? '#111' : '#fff'}; border: 1px solid var(--border); color: var(--text); border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; }
+                        body { font-family: 'Inter', sans-serif; padding: 40px; background: var(--bg); color: var(--text); -webkit-print-color-adjust: exact; }
+                        h1 { color: var(--primary); font-weight: 900; margin: 0; text-transform: uppercase; }
+                        .controls { display: flex; gap: 10px; margin: 30px 0; background: var(--row-bg); padding: 15px; border-radius: 15px; }
+                        .controls input, .controls select { flex: 1; padding: 10px; background: ${isDark ? '#111' : '#fff'}; border: 1px solid var(--primary); color: var(--text); border-radius: 8px; font-family: inherit; }
                         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-                        th { text-align: left; padding: 15px 20px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); border-bottom: 2px solid var(--primary); }
-                        td { padding: 25px 20px; background: var(--row-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
-                        td:first-child { border-left: 1px solid var(--border); border-top-left-radius: 15px; border-bottom-left-radius: 15px; }
-                        td:last-child { border-right: 1px solid var(--border); border-top-right-radius: 15px; border-bottom-right-radius: 15px; }
-                        .cat-tag { background: var(--primary); color: ${isDark ? '#000' : '#fff'}; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 9px; text-transform: uppercase; }
-                        .price { color: var(--primary); font-weight: 800; font-size: 15px; }
-                        .btn-select { background: var(--primary); color: ${isDark ? '#000' : '#fff'}; border: none; padding: 8px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 10px; text-transform: uppercase; transition: 0.2s; }
-                        .btn-select:hover { opacity: 0.8; transform: translateY(-2px); }
-                        .btn-select:active { transform: translateY(0); }
+                        th { text-align: left; padding: 15px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--primary); border-bottom: 2px solid var(--primary); }
+                        td { padding: 20px 15px; background: var(--row-bg); font-size: 13px; vertical-align: middle; }
+                        .price { color: var(--primary); font-weight: 800; font-size: 14px; }
+                        .btn-select { background: var(--primary); color: ${isDark ? '#000' : '#fff'}; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 10px; text-transform: uppercase; white-space: nowrap; width: 120px; }
                     </style>
                 </head>
                 <body>
-                    <header>
-                        <h1>Studio Service Registry</h1>
-                        <div style="font-size:10px; color:var(--primary); font-weight:800; text-transform:uppercase; letter-spacing:3px; margin-top:10px;">Prices synchronized in ${currentCur}</div>
-                    </header>
+                    <h1>Service Registry</h1>
                     <div class="controls">
-                        <select id="catFilter" onchange="applyFilters()"><option value="">All Departments</option>${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
-                        <input type="text" id="nameSearch" placeholder="Search service name..." oninput="applyFilters()">
+                        <select id="catFilter" onchange="applyFilters()"><option value="">All Categories</option>${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                        <input type="text" id="nameSearch" placeholder="Search product..." oninput="applyFilters()">
                     </div>
-                    <table><thead><tr><th style="width:10%">Dept</th><th style="width:20%">Service Name</th><th style="width:12%">Base Cost (${currentCur})</th><th style="width:10%">Lead Time</th><th style="width:38%">Specifications</th><th style="width:10%">Action</th></tr></thead><tbody id="registryBody"></tbody></table>
+                    <table><thead><tr><th width="15%">Dept</th><th width="20%">Service Name</th><th width="12%">Cost</th><th width="10%">Lead Time</th><th width="30%">Specifications</th><th width="13%">Action</th></tr></thead><tbody id="registryBody"></tbody></table>
                     <script>
                         const data = ${JSON.stringify(db)};
-                        const currency = "${currentCur}";
+                        const cur = "${currentCur}";
                         function renderTable(items) {
                             document.getElementById('registryBody').innerHTML = items.map(i => {
-                                let val = i[currency.toLowerCase()];
-                                let displayVal = currency === "PKR" ? Math.round(val).toLocaleString() : val.toFixed(2);
+                                let v = i[cur.toLowerCase()];
+                                let d = cur === "PKR" ? Math.round(v).toLocaleString() : v.toFixed(2);
                                 return \`<tr>
-                                    <td><span class="cat-tag">\${i.cat}</span></td>
+                                    <td><span style="font-weight:800; color:var(--primary)">\${i.cat}</span></td>
                                     <td style="font-weight:700;">\${i.name}</td>
-                                    <td class="price">\${currency} \${displayVal}</td>
-                                    <td style="opacity:0.8; font-weight:600;">\${i.time}</td>
-                                    <td style="opacity:0.6; font-size:12px; line-height:1.6;">\${i.details}</td>
-                                    <td><button class="btn-select" onclick="selectProduct('\${i.name}')">Add to Scope</button></td>
+                                    <td class="price">\${cur} \${d}</td>
+                                    <td style="opacity:0.7">\${i.time}</td>
+                                    <td style="opacity:0.6; font-size:12px;">\${i.details}</td>
+                                    <td><button class="btn-select" onclick="selectProduct('\${i.name}')">Add To Scope</button></td>
                                 </tr>\`;
                             }).join('');
                         }
-                        function selectProduct(name) {
-                            if (window.opener && !window.opener.closed) {
-                                window.opener.receiveProductSelection(name);
-                                const btn = event.target;
-                                btn.innerText = "Added ✓";
-                                btn.style.background = "#fff";
-                                btn.style.color = "#000";
-                                setTimeout(() => { 
-                                    btn.innerText = "Add to Scope"; 
-                                    btn.style.background = "var(--primary)";
-                                    btn.style.color = ${isDark ? '"#000"' : '"#fff"'};
-                                }, 1000);
-                            } else {
-                                alert("Calculator window closed. Please re-open registry from the calculator.");
+                        function selectProduct(n) {
+                            if(window.opener) {
+                                window.opener.receiveProductSelection(n);
+                                event.target.innerText = "Added ✓";
+                                setTimeout(() => event.target.innerText = "Add To Scope", 1000);
                             }
                         }
                         function applyFilters() {
@@ -263,18 +230,11 @@
         }
 
         function parseCell(cell) { if (!cell) return 0; let val = cell.f ? cell.f : String(cell.v); return parseFloat(val.replace(/[^0-9.]/g, '')) || 0; }
-        function cellStr(c) { if(!c) return "On Request"; const output = c.f ? c.f : (c.v !== undefined ? String(c.v) : "Standard"); return output === "null" || output === "" ? "Standard" : output; }
+        function cellStr(c) { if(!c) return "On Request"; return c.f ? c.f : (c.v !== undefined ? String(c.v) : "Standard"); }
 
         fetch(DATA_URL).then(r => r.text()).then(t => {
             const data = JSON.parse(t.substr(47).slice(0, -2));
-            db = data.table.rows.map(r => { 
-                const c = r.c; 
-                return c[0] && c[1] ? { 
-                    cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, 
-                    pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]),
-                    time: cellStr(c[13]), details: cellStr(c[14])
-                } : null; 
-            }).filter(x => x);
+            db = data.table.rows.map(r => { const c = r.c; return c[0] && c[1] ? { cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]), time: cellStr(c[13]), details: cellStr(c[14]) } : null; }).filter(x => x);
             const cats = [...new Set(db.map(i => i.cat))];
             document.getElementById('catSelect').innerHTML = '<option value="">Select Category</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
             document.getElementById('status').innerText = "Live: Synchronized";
@@ -320,7 +280,7 @@
                 return `<tr><td>${item.name}</td><td style="text-align:center">${item.qty}</td><td>PKR ${Math.round(p).toLocaleString()}</td><td style="font-weight:bold">dh ${a.toFixed(2)}</td></tr>`;
             }).join('');
             const discountedAED = sums.aed * (1 - (discountPercent / 100));
-            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.header-logo span { color: #1a1a1a; font-weight: 300; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.summary-box { margin-top: 20px; text-align: right; font-size: 12px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="summary-box">SUBTOTAL: dh ${sums.aed.toFixed(2)}<br>DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${discountedAED.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
+            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.summary-box { margin-top: 20px; text-align: right; font-size: 12px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="summary-box">SUBTOTAL: dh ${sums.aed.toFixed(2)}<br>DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${discountedAED.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
             printWindow.document.close();
             setTimeout(() => printWindow.print(), 500);
         }
