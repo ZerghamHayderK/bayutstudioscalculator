@@ -161,7 +161,15 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        // --- ENHANCED DYNAMIC REGISTRY ---
+        // --- GLOBAL FUNCTION TO RECEIVE DATA FROM REGISTRY ---
+        window.receiveProductSelection = function(productName) {
+            const item = db.find(i => i.name === productName);
+            if (item) {
+                cart.push({ ...item, qty: 1 });
+                render();
+            }
+        };
+
         function openProductList() {
             const listWindow = window.open('', '_blank');
             const isDark = document.body.classList.contains('dark-mode');
@@ -193,6 +201,9 @@
                         td:last-child { border-right: 1px solid var(--border); border-top-right-radius: 15px; border-bottom-right-radius: 15px; }
                         .cat-tag { background: var(--primary); color: ${isDark ? '#000' : '#fff'}; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 9px; text-transform: uppercase; }
                         .price { color: var(--primary); font-weight: 800; font-size: 15px; }
+                        .btn-select { background: var(--primary); color: ${isDark ? '#000' : '#fff'}; border: none; padding: 8px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 10px; text-transform: uppercase; transition: 0.2s; }
+                        .btn-select:hover { opacity: 0.8; transform: translateY(-2px); }
+                        .btn-select:active { transform: translateY(0); }
                     </style>
                 </head>
                 <body>
@@ -204,7 +215,7 @@
                         <select id="catFilter" onchange="applyFilters()"><option value="">All Departments</option>${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
                         <input type="text" id="nameSearch" placeholder="Search service name..." oninput="applyFilters()">
                     </div>
-                    <table><thead><tr><th style="width:12%">Dept</th><th style="width:25%">Service Name</th><th style="width:12%">Base Cost (${currentCur})</th><th style="width:10%">Lead Time</th><th style="width:41%">Specifications</th></tr></thead><tbody id="registryBody"></tbody></table>
+                    <table><thead><tr><th style="width:10%">Dept</th><th style="width:20%">Service Name</th><th style="width:12%">Base Cost (${currentCur})</th><th style="width:10%">Lead Time</th><th style="width:38%">Specifications</th><th style="width:10%">Action</th></tr></thead><tbody id="registryBody"></tbody></table>
                     <script>
                         const data = ${JSON.stringify(db)};
                         const currency = "${currentCur}";
@@ -218,8 +229,25 @@
                                     <td class="price">\${currency} \${displayVal}</td>
                                     <td style="opacity:0.8; font-weight:600;">\${i.time}</td>
                                     <td style="opacity:0.6; font-size:12px; line-height:1.6;">\${i.details}</td>
+                                    <td><button class="btn-select" onclick="selectProduct('\${i.name}')">Add to Scope</button></td>
                                 </tr>\`;
                             }).join('');
+                        }
+                        function selectProduct(name) {
+                            if (window.opener && !window.opener.closed) {
+                                window.opener.receiveProductSelection(name);
+                                const btn = event.target;
+                                btn.innerText = "Added ✓";
+                                btn.style.background = "#fff";
+                                btn.style.color = "#000";
+                                setTimeout(() => { 
+                                    btn.innerText = "Add to Scope"; 
+                                    btn.style.background = "var(--primary)";
+                                    btn.style.color = ${isDark ? '"#000"' : '"#fff"'};
+                                }, 1000);
+                            } else {
+                                alert("Calculator window closed. Please re-open registry from the calculator.");
+                            }
                         }
                         function applyFilters() {
                             const c = document.getElementById('catFilter').value;
@@ -235,14 +263,7 @@
         }
 
         function parseCell(cell) { if (!cell) return 0; let val = cell.f ? cell.f : String(cell.v); return parseFloat(val.replace(/[^0-9.]/g, '')) || 0; }
-        
-        // ROBUST CELL EXTRACTOR: Ensures text ranges like "15-35 days" never return null
-        function cellStr(c) {
-            if(!c) return "On Request";
-            // Check for formatted text 'f' first, then raw value 'v', then convert to string
-            const output = c.f ? c.f : (c.v !== undefined ? String(c.v) : "Standard");
-            return output === "null" || output === "" ? "Standard" : output;
-        }
+        function cellStr(c) { if(!c) return "On Request"; const output = c.f ? c.f : (c.v !== undefined ? String(c.v) : "Standard"); return output === "null" || output === "" ? "Standard" : output; }
 
         fetch(DATA_URL).then(r => r.text()).then(t => {
             const data = JSON.parse(t.substr(47).slice(0, -2));
@@ -251,8 +272,7 @@
                 return c[0] && c[1] ? { 
                     cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, 
                     pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]),
-                    time: cellStr(c[13]), // Column N correctly parsed as string
-                    details: cellStr(c[14]) // Column O correctly parsed as string
+                    time: cellStr(c[13]), details: cellStr(c[14])
                 } : null; 
             }).filter(x => x);
             const cats = [...new Set(db.map(i => i.cat))];
