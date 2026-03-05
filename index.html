@@ -17,23 +17,18 @@
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
         @keyframes glisten { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.2); } }
         
-        /* --- TOP RIGHT SQUARE THEME TOGGLE (CLEAN VERSION) --- */
-        .theme-toggle { 
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            background: var(--primary); border: none; 
-            width: 45px; height: 45px; border-radius: 8px;
-            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s;
-        }
-        .theme-toggle:hover { opacity: 0.9; transform: scale(1.05); }
+        /* THEME TOGGLE */
+        .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
+        body.dark-mode .theme-toggle { color: black; }
 
-        /* SIDEBAR (Desktop) */
+        /* SIDEBAR */
         .sidebar { width: 260px; background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-radius: 30px; height: calc(100vh - 50px); box-sizing: border-box; overflow-y: auto; position: sticky; top: 25px; }
         .section-title { color: var(--primary); font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-left: 3px solid var(--primary); padding-left: 10px; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 0.6rem; opacity: 0.6; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         input, select { background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-color); padding: 12px; border-radius: 12px; font-family: inherit; font-size: 0.85rem; outline: none; width: 100%; box-sizing: border-box; }
         
-        /* CONTENT (Desktop) */
+        /* CONTENT */
         .main-content { flex: 1; display: flex; flex-direction: column; gap: 20px; }
         .header { display: flex; justify-content: space-between; align-items: center; }
         .logo-block { display: flex; align-items: center; gap: 12px; }
@@ -49,7 +44,7 @@
         
         /* ITEM LIST & QTY EDITOR */
         .quote-item { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .qty-edit { width: 60px !important; padding: 5px !important; text-align: center; border-radius: 8px !important; margin-left: 10px; border: 1px solid var(--primary) !important; background: var(--input-bg); color: var(--text-color); }
+        .qty-edit { width: 65px !important; padding: 5px !important; text-align: center; border-radius: 8px !important; margin-left: 10px; border: 1px solid var(--primary) !important; background: var(--input-bg); color: var(--text-color); }
         .btn-remove { background: #ff4b4b; color: white; border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-weight: bold; }
         
         .valuation-card { background: linear-gradient(135deg, rgba(55, 179, 111, 0.1) 0%, rgba(0,0,0,0.05) 100%); border: 2px solid var(--primary); padding: 30px; border-radius: 25px; text-align: right; margin-top: 10px; }
@@ -61,7 +56,7 @@
         .cur-pill.active { background: var(--primary); color: white !important; opacity: 1; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
         body.dark-mode .cur-pill.active { color: #000 !important; }
 
-        /* --- MOBILE VIEW (RESPONSIVE ORDERING) --- */
+        /* --- MOBILE VIEW --- */
         @media screen and (max-width: 850px) {
             body { flex-direction: column; padding: 15px; gap: 20px; overflow-y: auto; }
             .sidebar { width: 100%; height: auto; position: relative; top: 0; border-radius: 20px; padding: 20px; order: 2; }
@@ -79,7 +74,6 @@
 </head>
 <body class="dark-mode">
     <div class="stars" id="starField"></div>
-    
     <button class="theme-toggle" onclick="toggleTheme()" title="Switch Theme"></button>
     
     <aside class="sidebar">
@@ -154,7 +148,7 @@
 
     <script>
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx:out:json`;
         let db = [], cart = [], activeCur = 'PKR';
 
         const savedTheme = localStorage.getItem('theme') || 'dark-mode';
