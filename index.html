@@ -147,7 +147,7 @@
 
     <script>
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx:out:json`;
+        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
         let db = [], cart = [], activeCur = 'PKR';
 
         const savedTheme = localStorage.getItem('theme') || 'dark-mode';
@@ -161,7 +161,7 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        // --- THE FIXED BROWSER ENGINE ---
+        // --- ENHANCED DYNAMIC REGISTRY ---
         function openProductList() {
             const listWindow = window.open('', '_blank');
             const isDark = document.body.classList.contains('dark-mode');
@@ -236,10 +236,12 @@
 
         function parseCell(cell) { if (!cell) return 0; let val = cell.f ? cell.f : String(cell.v); return parseFloat(val.replace(/[^0-9.]/g, '')) || 0; }
         
-        // HELPER TO EXTRACT STRING FROM CELL (Fixed Range Null Issue)
+        // ROBUST CELL EXTRACTOR: Ensures text ranges like "15-35 days" never return null
         function cellStr(c) {
-            if(!c) return "N/A";
-            return c.f ? c.f : String(c.v);
+            if(!c) return "On Request";
+            // Check for formatted text 'f' first, then raw value 'v', then convert to string
+            const output = c.f ? c.f : (c.v !== undefined ? String(c.v) : "Standard");
+            return output === "null" || output === "" ? "Standard" : output;
         }
 
         fetch(DATA_URL).then(r => r.text()).then(t => {
@@ -249,8 +251,8 @@
                 return c[0] && c[1] ? { 
                     cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, 
                     pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]),
-                    time: cellStr(c[13]), // Force string to support "15-30 days"
-                    details: cellStr(c[14])
+                    time: cellStr(c[13]), // Column N correctly parsed as string
+                    details: cellStr(c[14]) // Column O correctly parsed as string
                 } : null; 
             }).filter(x => x);
             const cats = [...new Set(db.map(i => i.cat))];
@@ -298,7 +300,7 @@
                 return `<tr><td>${item.name}</td><td style="text-align:center">${item.qty}</td><td>PKR ${Math.round(p).toLocaleString()}</td><td style="font-weight:bold">dh ${a.toFixed(2)}</td></tr>`;
             }).join('');
             const discountedAED = sums.aed * (1 - (discountPercent / 100));
-            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.summary-box { margin-top: 20px; text-align: right; font-size: 12px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="summary-box">SUBTOTAL: dh ${sums.aed.toFixed(2)}<br>DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${discountedAED.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
+            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.header-logo span { color: #1a1a1a; font-weight: 300; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.summary-box { margin-top: 20px; text-align: right; font-size: 12px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="summary-box">SUBTOTAL: dh ${sums.aed.toFixed(2)}<br>DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${discountedAED.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
             printWindow.document.close();
             setTimeout(() => printWindow.print(), 500);
         }
