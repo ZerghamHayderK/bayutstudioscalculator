@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bayut Studios | Price Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700;900&family=Inter:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700;900&family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         /* --- DASHBOARD THEME (PRESERVED) --- */
         body { transition: background-color 0.4s ease; margin: 0; min-height: 100vh; display: flex; box-sizing: border-box; gap: 25px; padding: 25px; overflow-x: hidden; }
@@ -145,7 +145,7 @@
 
     <script>
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx:out:json`;
+        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
         let db = [], cart = [], activeCur = 'PKR';
 
         const savedTheme = localStorage.getItem('theme') || 'dark-mode';
@@ -158,12 +158,12 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        // --- HARMONIZED EXTERNAL PRODUCT LIST VIEW ---
+        // --- SEXY HARMONIZED PRODUCT REGISTRY ---
         function openProductList() {
             const listWindow = window.open('', '_blank');
             let tableRows = db.map(i => `
                 <tr>
-                    <td class="cat-col">${i.cat}</td>
+                    <td class="cat-col"><span>${i.cat}</span></td>
                     <td class="name-col">${i.name}</td>
                     <td class="price-col">dh ${i.aed.toFixed(2)}</td>
                     <td class="time-col">${i.time}</td>
@@ -174,39 +174,54 @@
             listWindow.document.write(`
                 <html>
                 <head>
-                    <title>Bayut Studios | Registry</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+                    <title>Service Registry | Bayut Studios</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
                     <style>
-                        body { font-family: 'Inter', sans-serif; padding: 60px 40px; background: #fff; color: #1a1a1a; -webkit-print-color-adjust: exact; }
-                        header { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+                        body { font-family: 'Inter', sans-serif; padding: 60px 50px; background: #050505; color: #fff; -webkit-print-color-adjust: exact; }
+                        header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+                        .logo-wrap { display: flex; align-items: center; gap: 15px; }
                         .logo-mark { height: 45px; }
-                        h1 { font-size: 28px; font-weight: 800; color: #37b36f; margin: 0; letter-spacing: -0.5px; }
-                        .banner { background: #37b36f; color: white; padding: 12px 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; margin-bottom: 40px; border-radius: 2px; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th { text-align: left; background: #f9fbf9; padding: 16px 12px; border-bottom: 2px solid #37b36f; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #666; }
-                        td { padding: 18px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; line-height: 1.5; color: #333; }
-                        .cat-col { color: #37b36f; font-weight: 700; font-size: 11px; text-transform: uppercase; }
-                        .name-col { font-weight: 700; font-size: 14px; color: #000; }
-                        .price-col { font-weight: 600; font-family: 'Inter', sans-serif; color: #000; }
-                        .time-col { color: #777; font-weight: 500; }
-                        .details-col { color: #555; font-weight: 400; font-size: 12px; }
-                        tr:hover { background: #fcfcfc; }
+                        h1 { font-size: 24px; font-weight: 900; color: #37b36f; margin: 0; text-transform: uppercase; letter-spacing: -0.5px; }
+                        .registry-label { font-size: 10px; font-weight: 800; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+                        
+                        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 20px; }
+                        th { text-align: left; padding: 15px 20px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #37b36f; border-bottom: 2px solid #37b36f; }
+                        
+                        tr { transition: 0.3s; }
+                        td { padding: 25px 20px; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; vertical-align: middle; }
+                        
+                        td:first-child { border-left: 1px solid rgba(255,255,255,0.05); border-top-left-radius: 15px; border-bottom-left-radius: 15px; }
+                        td:last-child { border-right: 1px solid rgba(255,255,255,0.05); border-top-right-radius: 15px; border-bottom-right-radius: 15px; }
+                        
+                        tr:hover td { background: rgba(55, 179, 111, 0.1); border-color: rgba(55, 179, 111, 0.3); }
+                        
+                        .cat-col span { background: rgba(55, 179, 111, 0.2); color: #37b36f; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; }
+                        .name-col { font-weight: 700; font-size: 15px; color: #fff; }
+                        .price-col { font-weight: 800; font-size: 16px; color: #37b36f; white-space: nowrap; }
+                        .time-col { color: rgba(255,255,255,0.6); font-weight: 600; font-size: 12px; }
+                        .details-col { color: rgba(255,255,255,0.5); font-weight: 400; font-size: 12px; line-height: 1.6; max-width: 400px; }
+                        
+                        @media print { body { background: #fff; color: #000; padding: 20px; } td { background: #f9f9f9; color: #000; } .name-col, h1 { color: #000; } }
                     </style>
                 </head>
                 <body>
                     <header>
-                        <img src="wlogo.png" class="logo-mark" onerror="this.style.display='none'">
-                        <h1>Bayut Studios | Service Registry</h1>
+                        <div class="logo-wrap">
+                            <img src="wlogo.png" class="logo-mark" onerror="this.style.display='none'">
+                            <div>
+                                <h1>Bayut Studios</h1>
+                                <div class="registry-label">Internal Service Registry</div>
+                            </div>
+                        </div>
                     </header>
-                    <div class="banner">Comprehensive Product Inventory</div>
                     <table>
                         <thead>
                             <tr>
-                                <th style="width:15%">Department</th>
-                                <th style="width:25%">Service Product</th>
-                                <th style="width:12%">Standard Cost</th>
-                                <th style="width:12%">Est. Time</th>
-                                <th style="width:36%">Production Details</th>
+                                <th style="width:12%">Department</th>
+                                <th style="width:25%">Service Name</th>
+                                <th style="width:12%">Base Value</th>
+                                <th style="width:10%">Lead Time</th>
+                                <th style="width:41%">Specifications</th>
                             </tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
@@ -226,8 +241,8 @@
                 return c[0] && c[1] ? { 
                     cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, 
                     pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]),
-                    time: c[13] ? c[13].v : "On Request", 
-                    details: c[14] ? c[14].v : "Detailed specifications available upon request."
+                    time: c[13] ? c[13].v : "Standard", 
+                    details: c[14] ? c[14].v : "Detailed technical production specs available on request."
                 } : null; 
             }).filter(x => x);
             const cats = [...new Set(db.map(i => i.cat))];
