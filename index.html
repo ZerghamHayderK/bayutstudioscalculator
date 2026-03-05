@@ -16,7 +16,6 @@
         body.dark-mode .stars { display: block; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
         
-        .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .sidebar { width: 260px; background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-radius: 30px; height: calc(100vh - 50px); box-sizing: border-box; overflow-y: auto; position: sticky; top: 25px; }
         .section-title { color: var(--primary); font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-left: 3px solid var(--primary); padding-left: 10px; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
@@ -74,7 +73,7 @@
             <input type="text" id="clientAddressInput" placeholder="Enter address">
         </div>
         <div class="input-group">
-            <div class="section-title">Global Adjustments</div>
+            <div class="section-title">Adjustments</div>
             <label>Overall Discount (%)</label>
             <input type="number" id="globalDiscountInput" value="0" step="0.5" oninput="render()">
         </div>
@@ -87,7 +86,7 @@
     <main class="main-content">
         <div class="header">
             <div class="logo-block">
-                <img src="wlogo.png" alt="Logo" style="height:40px" onerror="this.style.display='none'">
+                <img src="Blogo.png" alt="Logo" style="height:40px" onerror="this.style.display='none'">
                 <h1 class="logo-text">Bayut Studios | Price Calculator</h1>
             </div>
             <div class="btn-header-group" style="display: flex; gap: 10px;">
@@ -280,7 +279,7 @@
                 return `<tr><td>${item.name}</td><td style="text-align:center">${item.qty}</td><td>PKR ${Math.round(p).toLocaleString()}</td><td style="font-weight:bold">dh ${a.toFixed(2)}</td></tr>`;
             }).join('');
             const dAED = sums.aed * (1 - (discountPercent / 100));
-            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div style="text-align:right; margin-top:20px; font-size:12px">DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${dAED.toFixed(2)}</span></div></body></html>`);
+            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }</style></head><body><div class="header-logo"><img src="Blogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div style="text-align:right; margin-top:20px; font-size:12px">DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${dAED.toFixed(2)}</span></div></body></html>`);
             printWindow.document.close();
             setTimeout(() => printWindow.print(), 500);
         }
