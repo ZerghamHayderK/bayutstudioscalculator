@@ -17,18 +17,23 @@
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
         @keyframes glisten { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.2); } }
         
-        /* THEME TOGGLE */
-        .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        body.dark-mode .theme-toggle { color: black; }
+        /* --- TOP RIGHT SQUARE THEME TOGGLE (CLEAN VERSION) --- */
+        .theme-toggle { 
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: var(--primary); border: none; 
+            width: 45px; height: 45px; border-radius: 8px;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s;
+        }
+        .theme-toggle:hover { opacity: 0.9; transform: scale(1.05); }
 
-        /* SIDEBAR */
+        /* SIDEBAR (Desktop) */
         .sidebar { width: 260px; background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-radius: 30px; height: calc(100vh - 50px); box-sizing: border-box; overflow-y: auto; position: sticky; top: 25px; }
         .section-title { color: var(--primary); font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-left: 3px solid var(--primary); padding-left: 10px; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 0.6rem; opacity: 0.6; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         input, select { background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-color); padding: 12px; border-radius: 12px; font-family: inherit; font-size: 0.85rem; outline: none; width: 100%; box-sizing: border-box; }
         
-        /* CONTENT */
+        /* CONTENT (Desktop) */
         .main-content { flex: 1; display: flex; flex-direction: column; gap: 20px; }
         .header { display: flex; justify-content: space-between; align-items: center; }
         .logo-block { display: flex; align-items: center; gap: 12px; }
@@ -44,7 +49,7 @@
         
         /* ITEM LIST & QTY EDITOR */
         .quote-item { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .qty-edit { width: 60px !important; padding: 5px !important; text-align: center; border-radius: 8px !important; margin-left: 10px; border: 1px solid var(--primary) !important; }
+        .qty-edit { width: 60px !important; padding: 5px !important; text-align: center; border-radius: 8px !important; margin-left: 10px; border: 1px solid var(--primary) !important; background: var(--input-bg); color: var(--text-color); }
         .btn-remove { background: #ff4b4b; color: white; border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-weight: bold; }
         
         .valuation-card { background: linear-gradient(135deg, rgba(55, 179, 111, 0.1) 0%, rgba(0,0,0,0.05) 100%); border: 2px solid var(--primary); padding: 30px; border-radius: 25px; text-align: right; margin-top: 10px; }
@@ -56,7 +61,7 @@
         .cur-pill.active { background: var(--primary); color: white !important; opacity: 1; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
         body.dark-mode .cur-pill.active { color: #000 !important; }
 
-        /* --- MOBILE VIEW --- */
+        /* --- MOBILE VIEW (RESPONSIVE ORDERING) --- */
         @media screen and (max-width: 850px) {
             body { flex-direction: column; padding: 15px; gap: 20px; overflow-y: auto; }
             .sidebar { width: 100%; height: auto; position: relative; top: 0; border-radius: 20px; padding: 20px; order: 2; }
@@ -75,7 +80,7 @@
 <body class="dark-mode">
     <div class="stars" id="starField"></div>
     
-    <button class="theme-toggle" onclick="toggleTheme()" title="Switch Theme">⇄</button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Switch Theme"></button>
     
     <aside class="sidebar">
         <div class="input-group">
@@ -149,7 +154,7 @@
 
     <script>
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx:out:json`;
+        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
         let db = [], cart = [], activeCur = 'PKR';
 
         const savedTheme = localStorage.getItem('theme') || 'dark-mode';
@@ -178,29 +183,7 @@
                 return `<tr><td>${item.name}</td><td style="text-align:center">${item.qty}</td><td>PKR ${Math.round(p).toLocaleString()}</td><td style="font-weight:bold">dh ${a.toFixed(2)}</td></tr>`;
             }).join('');
 
-            printWindow.document.write(`
-                <html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>
-                body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }
-                .header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }
-                .title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }
-                .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }
-                table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-                th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }
-                td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }
-                .due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 20px; display: flex; justify-content: space-between; font-weight: 800; }
-                .footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }
-                </style></head><body>
-                <div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div>
-                <div class="title-banner">Project Proposal</div>
-                <div class="info-grid">
-                    <div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div>
-                    <div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div>
-                </div>
-                <table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead>
-                <tbody>${rows}</tbody></table>
-                <div class="due-box"><span>Total Project Value</span><span>dh ${sums.aed.toFixed(2)}</span></div>
-                <div class="footer-bar"></div></body></html>
-            `);
+            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 20px; display: flex; justify-content: space-between; font-weight: 800; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="due-box"><span>Total Project Value</span><span>dh ${sums.aed.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
             printWindow.document.close();
             setTimeout(() => printWindow.print(), 500);
         }
@@ -217,13 +200,7 @@
 
         function updateProducts() { const cat = document.getElementById('catSelect').value; document.getElementById('prodSelect').innerHTML = db.filter(i => i.cat === cat).map(i => `<option value="${i.name}">${i.name}</option>`).join(''); }
         function setCurrency(code) { activeCur = code; document.querySelectorAll('.cur-pill').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + code).classList.add('active'); render(); }
-        
-        function addToQuote() { 
-            const name = document.getElementById('prodSelect').value; 
-            const qty = parseInt(document.getElementById('unitInput').value) || 1; 
-            const item = db.find(i => i.name === name); 
-            if (item) { cart.push({ ...item, qty }); render(); } 
-        }
+        function addToQuote() { const name = document.getElementById('prodSelect').value; const qty = parseInt(document.getElementById('unitInput').value) || 1; const item = db.find(i => i.name === name); if (item) { cart.push({ ...item, qty }); render(); } }
 
         function updateQty(idx, val) {
             cart[idx].qty = parseInt(val) || 1;
@@ -237,17 +214,7 @@
                 const p = (item.pkr / item.bQty) * item.qty; const s = (item.sar / item.bQty) * item.qty; const a = (item.aed / item.bQty) * item.qty; const u = (item.usd / item.bQty) * item.qty;
                 sums.pkr += p; sums.sar += s; sums.aed += a; sums.usd += u;
                 const dVal = activeCur === 'PKR' ? Math.round(p).toLocaleString() : (sums[activeCur.toLowerCase()] / sums.pkr * p).toFixed(2);
-                
-                list.innerHTML += `<div class="quote-item">
-                    <div>
-                        <b>${item.name}</b><br>
-                        <small>Qty: <input type="number" class="qty-edit" value="${item.qty}" min="1" onchange="updateQty(${idx}, this.value)"></small>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <span style="font-weight:900;">${activeCur} ${dVal}</span>
-                        <button class="btn-remove" onclick="cart.splice(${idx},1);render()">×</button>
-                    </div>
-                </div>`;
+                list.innerHTML += `<div class="quote-item"><div><b>${item.name}</b><br><small>Qty: <input type="number" class="qty-edit" value="${item.qty}" min="1" onchange="updateQty(${idx}, this.value)"></small></div><div style="display:flex; align-items:center; gap:15px;"><span style="font-weight:900;">${activeCur} ${dVal}</span><button class="btn-remove" onclick="cart.splice(${idx},1);render()">×</button></div></div>`;
             });
             document.getElementById('mainTotal').innerText = activeCur === 'PKR' ? `PKR ${Math.round(sums.pkr).toLocaleString()}` : `${activeCur} ${sums[activeCur.toLowerCase()].toFixed(2)}`;
             document.getElementById('subTotals').innerText = `SAR ${sums.sar.toFixed(2)} | AED ${sums.aed.toFixed(2)} | USD ${sums.usd.toFixed(2)}`;
