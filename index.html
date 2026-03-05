@@ -188,7 +188,7 @@
                         <select id="catFilter" onchange="applyFilters()"><option value="">All Categories</option>${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
                         <input type="text" id="nameSearch" placeholder="Search product..." oninput="applyFilters()">
                     </div>
-                    <table><thead><tr><th width="15%">Dept</th><th width="20%">Service Name</th><th width="12%">Cost</th><th width="10%">Lead Time</th><th width="33%">Specifications</th><th width="10%">Add</th></tr></thead><tbody id="registryBody"></tbody></table>
+                    <table><thead><tr><th width="15%">Category</th><th width="20%">Product</th><th width="12%">Price</th><th width="10%">Turn-Around Time</th><th width="33%">Details</th><th width="10%">Add</th></tr></thead><tbody id="registryBody"></tbody></table>
                     <script>
                         const data = ${JSON.stringify(db)};
                         const cur = "${cur}";
