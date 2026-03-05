@@ -161,7 +161,7 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        // --- FULLY SYNCHRONIZED EXTERNAL REGISTRY ---
+        // --- THE FIXED BROWSER ENGINE ---
         function openProductList() {
             const listWindow = window.open('', '_blank');
             const isDark = document.body.classList.contains('dark-mode');
@@ -216,8 +216,8 @@
                                     <td><span class="cat-tag">\${i.cat}</span></td>
                                     <td style="font-weight:700;">\${i.name}</td>
                                     <td class="price">\${currency} \${displayVal}</td>
-                                    <td style="opacity:0.6; font-weight:600;">\${i.time}</td>
-                                    <td style="opacity:0.5; font-size:12px; line-height:1.6;">\${i.details}</td>
+                                    <td style="opacity:0.8; font-weight:600;">\${i.time}</td>
+                                    <td style="opacity:0.6; font-size:12px; line-height:1.6;">\${i.details}</td>
                                 </tr>\`;
                             }).join('');
                         }
@@ -235,6 +235,13 @@
         }
 
         function parseCell(cell) { if (!cell) return 0; let val = cell.f ? cell.f : String(cell.v); return parseFloat(val.replace(/[^0-9.]/g, '')) || 0; }
+        
+        // HELPER TO EXTRACT STRING FROM CELL (Fixed Range Null Issue)
+        function cellStr(c) {
+            if(!c) return "N/A";
+            return c.f ? c.f : String(c.v);
+        }
+
         fetch(DATA_URL).then(r => r.text()).then(t => {
             const data = JSON.parse(t.substr(47).slice(0, -2));
             db = data.table.rows.map(r => { 
@@ -242,8 +249,8 @@
                 return c[0] && c[1] ? { 
                     cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, 
                     pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]),
-                    time: c[13] ? c[13].v : "Standard", 
-                    details: c[14] ? c[14].v : "Specifications available on request."
+                    time: cellStr(c[13]), // Force string to support "15-30 days"
+                    details: cellStr(c[14])
                 } : null; 
             }).filter(x => x);
             const cats = [...new Set(db.map(i => i.cat))];
