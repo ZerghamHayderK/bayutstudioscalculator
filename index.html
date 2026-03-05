@@ -30,10 +30,8 @@
         .logo-img { height: 40px; width: auto; }
         .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin: 0; letter-spacing: -1px; }
         
-        /* HEADER BUTTONS */
-        .btn-top { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; transition: 0.3s; }
+        .btn-top { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; transition: 0.3s; }
         body.dark-mode .btn-top { color: black; }
-        .btn-top:hover { transform: scale(1.05); }
 
         .card { background: var(--panel-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px; }
         .builder-row { display: grid; grid-template-columns: 1.5fr 1.5fr 0.5fr 1fr; gap: 15px; align-items: flex-end; }
@@ -53,19 +51,6 @@
         .cur-pill.active { background: var(--primary); color: white !important; opacity: 1; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
         body.dark-mode .cur-pill.active { color: #000 !important; }
 
-        /* --- PRODUCT BROWSER OVERLAY --- */
-        #productBrowser { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; padding: 40px; box-sizing: border-box; overflow-y: auto; backdrop-filter: blur(15px); }
-        .browser-content { max-width: 1100px; margin: 0 auto; }
-        .browser-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--primary); padding-bottom: 20px; }
-        .browser-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .product-card { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; transition: 0.3s; }
-        .product-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-        .prod-cat-label { font-size: 0.6rem; color: var(--primary); font-weight: 900; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .prod-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; display: block; }
-        .prod-meta { display: flex; gap: 15px; font-size: 0.8rem; margin-bottom: 15px; opacity: 0.8; }
-        .prod-details { font-size: 0.8rem; opacity: 0.6; line-height: 1.5; }
-
-        /* --- MOBILE VIEW --- */
         @media screen and (max-width: 850px) {
             body { flex-direction: column; padding: 15px; gap: 20px; overflow-y: auto; }
             .sidebar { width: 100%; height: auto; position: relative; top: 0; border-radius: 20px; padding: 20px; order: 2; }
@@ -81,16 +66,6 @@
 <body class="dark-mode">
     <div class="stars" id="starField"></div>
     <button class="theme-toggle" onclick="toggleTheme()" title="Switch Theme"></button>
-    
-    <div id="productBrowser">
-        <div class="browser-content">
-            <div class="browser-header">
-                <h1 class="logo-text">Service Inventory</h1>
-                <button class="btn-top" onclick="toggleBrowser()">Close Browser</button>
-            </div>
-            <div id="browserGrid" class="browser-grid"></div>
-        </div>
-    </div>
 
     <aside class="sidebar">
         <div class="input-group">
@@ -124,7 +99,7 @@
                 <h1 class="logo-text">Bayut Studios | Price Calculator</h1>
             </div>
             <div class="btn-header-group" style="display: flex; gap: 10px;">
-                <button class="btn-top" onclick="toggleBrowser()" style="background: transparent; border: 1px solid var(--primary); color: var(--primary);">Browse Products</button>
+                <button class="btn-top" onclick="openProductList()" style="background: transparent; border: 1px solid var(--primary); color: var(--primary);">Browse Products</button>
                 <button class="btn-top" onclick="generateInvoice()">Download PDF</button>
             </div>
         </div>
@@ -183,10 +158,51 @@
             localStorage.setItem('theme', newTheme);
         }
 
-        function toggleBrowser() {
-            const b = document.getElementById('productBrowser');
-            b.style.display = (b.style.display === 'block') ? 'none' : 'block';
-            if(b.style.display === 'block') populateBrowser();
+        // --- NEW EXTERNAL PRODUCT LIST VIEW ---
+        function openProductList() {
+            const listWindow = window.open('', '_blank');
+            let tableRows = db.map(i => `
+                <tr>
+                    <td style="color:#37b36f; font-weight:800; font-size:10px; text-transform:uppercase;">${i.cat}</td>
+                    <td style="font-weight:700;">${i.name}</td>
+                    <td style="font-family:monospace; font-weight:700;">AED ${i.aed.toFixed(2)}</td>
+                    <td style="color:#666;">${i.time}</td>
+                    <td style="font-size:11px; color:#444; line-height:1.4;">${i.details}</td>
+                </tr>
+            `).join('');
+
+            listWindow.document.write(`
+                <html>
+                <head>
+                    <title>Bayut Studios | Product Catalog</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Inter', sans-serif; padding: 40px; background: #fff; color: #1a1a1a; }
+                        h1 { color: #37b36f; font-weight: 800; border-bottom: 3px solid #37b36f; padding-bottom: 10px; margin-bottom: 30px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th { text-align: left; background: #f8fbf9; padding: 15px; border-bottom: 2px solid #37b36f; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+                        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 13px; vertical-align: top; }
+                        tr:hover { background: #fcfcfc; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Service Catalog</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:15%">Category</th>
+                                <th style="width:25%">Product Name</th>
+                                <th style="width:12%">Cost</th>
+                                <th style="width:10%">Time</th>
+                                <th style="width:38%">Service Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                </body>
+                </html>
+            `);
+            listWindow.document.close();
         }
 
         function parseCell(cell) { if (!cell) return 0; let val = cell.f ? cell.f : String(cell.v); return parseFloat(val.replace(/[^0-9.]/g, '')) || 0; }
@@ -196,42 +212,16 @@
             db = data.table.rows.map(r => { 
                 const c = r.c; 
                 return c[0] && c[1] ? { 
-                    cat: c[0].v, 
-                    name: c[1].v, 
-                    bQty: parseCell(c[2]) || 1, 
-                    pkr: parseCell(c[4]), 
-                    usd: parseCell(c[5]), 
-                    sar: parseCell(c[6]), 
-                    aed: parseCell(c[7]),
+                    cat: c[0].v, name: c[1].v, bQty: parseCell(c[2]) || 1, 
+                    pkr: parseCell(c[4]), usd: parseCell(c[5]), sar: parseCell(c[6]), aed: parseCell(c[7]),
                     time: c[13] ? c[13].v : "N/A", // Column N
-                    details: c[14] ? c[14].v : "No additional details available." // Column O
+                    details: c[14] ? c[14].v : "Contact studio for full details." // Column O
                 } : null; 
             }).filter(x => x);
             const cats = [...new Set(db.map(i => i.cat))];
             document.getElementById('catSelect').innerHTML = '<option value="">Select Category</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
             document.getElementById('status').innerText = "Live: Synchronized";
         });
-
-        function populateBrowser() {
-            const grid = document.getElementById('browserGrid');
-            grid.innerHTML = db.map(i => `
-                <div class="product-card">
-                    <span class="prod-cat-label">${i.cat}</span>
-                    <strong class="prod-name">${i.name}</strong>
-                    <div class="prod-meta">
-                        <span><strong>AED:</strong> ${i.aed.toFixed(2)}</span>
-                        <span><strong>Time:</strong> ${i.time}</span>
-                    </div>
-                    <p class="prod-details">${i.details}</p>
-                    <button class="btn-top" style="width:100%; margin-top:15px; padding:10px;" onclick="addFromBrowser('${i.name}')">Select Product</button>
-                </div>
-            `).join('');
-        }
-
-        function addFromBrowser(name) {
-            const item = db.find(i => i.name === name);
-            if(item) { cart.push({ ...item, qty: 1 }); render(); toggleBrowser(); }
-        }
 
         function updateProducts() { const cat = document.getElementById('catSelect').value; document.getElementById('prodSelect').innerHTML = db.filter(i => i.cat === cat).map(i => `<option value="${i.name}">${i.name}</option>`).join(''); }
         function setCurrency(code) { activeCur = code; document.querySelectorAll('.cur-pill').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + code).classList.add('active'); render(); }
