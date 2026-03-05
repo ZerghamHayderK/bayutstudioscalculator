@@ -16,7 +16,7 @@
         body.dark-mode .stars { display: block; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: glisten var(--duration) infinite ease-in-out; }
         
-        .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
+        .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--primary); border: none; width: 45px; height: 45px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .sidebar { width: 260px; background: var(--panel-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-radius: 30px; height: calc(100vh - 50px); box-sizing: border-box; overflow-y: auto; position: sticky; top: 25px; }
         .section-title { color: var(--primary); font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; border-left: 3px solid var(--primary); padding-left: 10px; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
@@ -28,7 +28,7 @@
         .logo-block { display: flex; align-items: center; gap: 12px; }
         .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin: 0; letter-spacing: -1px; }
         
-        .btn-top { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; transition: 0.3s; }
+        .btn-top { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; }
         body.dark-mode .btn-top { color: black; }
 
         .card { background: var(--panel-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px; }
@@ -137,7 +137,7 @@
 
     <script>
         const SHEET_ID = '1qvBKlYH7q4dXsu7tEh9OLnKSydfONNRzGa-xjUYLB0g';
-        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx:out:json`;
         let db = [], cart = [], activeCur = 'PKR';
 
         const savedTheme = localStorage.getItem('theme') || 'dark-mode';
@@ -159,14 +159,14 @@
         function openProductList() {
             const listWindow = window.open('', '_blank');
             const isDark = document.body.classList.contains('dark-mode');
-            const currentCur = activeCur;
+            const cur = activeCur;
             const cats = [...new Set(db.map(i => i.cat))];
             
             listWindow.document.write(`
                 <html>
                 <head>
-                    <title>Service Registry | Bayut Studios</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+                    <title>Registry | Bayut Studios</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
                     <style>
                         :root {
                             --primary: ${isDark ? '#37b36f' : '#0d9488'};
@@ -174,15 +174,15 @@
                             --text: ${isDark ? '#ffffff' : '#0f172a'};
                             --row-bg: ${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'};
                         }
-                        body { font-family: 'Inter', sans-serif; padding: 40px; background: var(--bg); color: var(--text); -webkit-print-color-adjust: exact; }
+                        body { font-family: 'Inter', sans-serif; padding: 40px; background: var(--bg); color: var(--text); }
                         h1 { color: var(--primary); font-weight: 900; margin: 0; text-transform: uppercase; }
                         .controls { display: flex; gap: 10px; margin: 30px 0; background: var(--row-bg); padding: 15px; border-radius: 15px; }
                         .controls input, .controls select { flex: 1; padding: 10px; background: ${isDark ? '#111' : '#fff'}; border: 1px solid var(--primary); color: var(--text); border-radius: 8px; font-family: inherit; }
                         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
                         th { text-align: left; padding: 15px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--primary); border-bottom: 2px solid var(--primary); }
                         td { padding: 20px 15px; background: var(--row-bg); font-size: 13px; vertical-align: middle; }
-                        .price { color: var(--primary); font-weight: 800; font-size: 14px; }
-                        .btn-select { background: var(--primary); color: ${isDark ? '#000' : '#fff'}; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 10px; text-transform: uppercase; white-space: nowrap; width: 120px; }
+                        .btn-cart { background: var(--primary); color: ${isDark ? '#000' : '#fff'}; border: none; width: 45px; height: 45px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+                        .btn-cart:hover { transform: scale(1.1); opacity: 0.9; }
                     </style>
                 </head>
                 <body>
@@ -191,10 +191,10 @@
                         <select id="catFilter" onchange="applyFilters()"><option value="">All Categories</option>${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
                         <input type="text" id="nameSearch" placeholder="Search product..." oninput="applyFilters()">
                     </div>
-                    <table><thead><tr><th width="15%">Dept</th><th width="20%">Service Name</th><th width="12%">Cost</th><th width="10%">Lead Time</th><th width="30%">Specifications</th><th width="13%">Action</th></tr></thead><tbody id="registryBody"></tbody></table>
+                    <table><thead><tr><th width="15%">Dept</th><th width="20%">Service Name</th><th width="12%">Cost</th><th width="10%">Lead Time</th><th width="33%">Specifications</th><th width="10%">Add</th></tr></thead><tbody id="registryBody"></tbody></table>
                     <script>
                         const data = ${JSON.stringify(db)};
-                        const cur = "${currentCur}";
+                        const cur = "${cur}";
                         function renderTable(items) {
                             document.getElementById('registryBody').innerHTML = items.map(i => {
                                 let v = i[cur.toLowerCase()];
@@ -202,18 +202,20 @@
                                 return \`<tr>
                                     <td><span style="font-weight:800; color:var(--primary)">\${i.cat}</span></td>
                                     <td style="font-weight:700;">\${i.name}</td>
-                                    <td class="price">\${cur} \${d}</td>
+                                    <td style="font-weight:800; color:var(--primary)">\${cur} \${d}</td>
                                     <td style="opacity:0.7">\${i.time}</td>
                                     <td style="opacity:0.6; font-size:12px;">\${i.details}</td>
-                                    <td><button class="btn-select" onclick="selectProduct('\${i.name}')">Add To Scope</button></td>
+                                    <td><button class="btn-cart" onclick="selectProduct('\${i.name}')" title="Add to Scope">+ 🛒</button></td>
                                 </tr>\`;
                             }).join('');
                         }
                         function selectProduct(n) {
                             if(window.opener) {
                                 window.opener.receiveProductSelection(n);
-                                event.target.innerText = "Added ✓";
-                                setTimeout(() => event.target.innerText = "Add To Scope", 1000);
+                                const btn = event.currentTarget;
+                                btn.innerHTML = "✓";
+                                btn.style.background = "#fff"; btn.style.color = "#000";
+                                setTimeout(() => { btn.innerHTML = "+ 🛒"; btn.style.background = "var(--primary)"; btn.style.color = "${isDark ? '#000' : '#fff'}"; }, 800);
                             }
                         }
                         function applyFilters() {
@@ -230,7 +232,7 @@
         }
 
         function parseCell(cell) { if (!cell) return 0; let val = cell.f ? cell.f : String(cell.v); return parseFloat(val.replace(/[^0-9.]/g, '')) || 0; }
-        function cellStr(c) { if(!c) return "On Request"; return c.f ? c.f : (c.v !== undefined ? String(c.v) : "Standard"); }
+        function cellStr(c) { if(!c) return "On Request"; const o = c.f ? c.f : (c.v !== undefined ? String(c.v) : "Standard"); return (o === "null" || o === "") ? "Standard" : o; }
 
         fetch(DATA_URL).then(r => r.text()).then(t => {
             const data = JSON.parse(t.substr(47).slice(0, -2));
@@ -274,13 +276,11 @@
             const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
             let sums = { pkr: 0, aed: 0 };
             let rows = cart.map(item => {
-                const p = (item.pkr / item.bQty) * item.qty;
-                const a = (item.aed / item.bQty) * item.qty;
-                sums.pkr += p; sums.aed += a;
+                const p = (item.pkr / item.bQty) * item.qty; const a = (item.aed / item.bQty) * item.qty; sums.pkr += p; sums.aed += a;
                 return `<tr><td>${item.name}</td><td style="text-align:center">${item.qty}</td><td>PKR ${Math.round(p).toLocaleString()}</td><td style="font-weight:bold">dh ${a.toFixed(2)}</td></tr>`;
             }).join('');
-            const discountedAED = sums.aed * (1 - (discountPercent / 100));
-            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.summary-box { margin-top: 20px; text-align: right; font-size: 12px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }.footer-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 10px; background: #37b36f; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div class="summary-box">SUBTOTAL: dh ${sums.aed.toFixed(2)}<br>DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${discountedAED.toFixed(2)}</span></div><div class="footer-bar"></div></body></html>`);
+            const dAED = sums.aed * (1 - (discountPercent / 100));
+            printWindow.document.write(`<html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>body { font-family: 'Inter', sans-serif; padding: 40mm 20mm; color: #1a1a1a; -webkit-print-color-adjust: exact; }.header-logo { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; font-size: 28px; color: #37b36f; margin-bottom: 20px; }.title-banner { background: #37b36f; color: white; text-align: center; padding: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; font-size: 11px; }table { width: 100%; border-collapse: collapse; margin-top: 10px; }th { background: #37b36f; color: white; font-size: 10px; text-transform: uppercase; padding: 12px 8px; text-align: left; }td { padding: 12px 8px; border-bottom: 1px solid #eee; font-size: 11px; }.due-box { background: #37b36f; color: white; padding: 15px 20px; margin-top: 10px; display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; }</style></head><body><div class="header-logo"><img src="wlogo.png" style="height:40px"> Bayut Studios</div><div class="title-banner">Project Proposal</div><div class="info-grid"><div><strong>Billed From:</strong><br>Bayut Studios<br>Dubai Design District, Dubai</div><div style="text-align:right"><strong>Billed To:</strong><br>${clientName}<br>${clientEmail}<br>${clientAddress}</div></div><table><thead><tr><th>Category</th><th style="text-align:center">Units</th><th>Price (PKR)</th><th>Price (AED)</th></tr></thead><tbody>${rows}</tbody></table><div style="text-align:right; margin-top:20px; font-size:12px">DISCOUNT: ${discountPercent}%</div><div class="due-box"><span>Total Project Value</span><span>dh ${dAED.toFixed(2)}</span></div></body></html>`);
             printWindow.document.close();
             setTimeout(() => printWindow.print(), 500);
         }
